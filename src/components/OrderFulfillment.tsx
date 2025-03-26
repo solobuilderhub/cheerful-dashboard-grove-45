@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 
 const data = [
   { name: 'Week 1', orders: 220, fulfillment: 230 },
@@ -87,13 +88,24 @@ export function OrderFulfillment() {
       </div>
 
       <div className="grid grid-cols-2 gap-4 mt-8">
-        <div className="bg-secondary rounded-lg p-3 text-center">
-          <p className="text-xs text-muted-foreground mb-1">Stock</p>
-          <p className="text-lg font-bold">96%</p>
+        <div className="bg-secondary rounded-lg p-3">
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-muted-foreground">Stock</p>
+            <div className="flex items-center gap-1 text-teal text-xs">
+              <ArrowUpRight size={12} />
+              <span>+2.5%</span>
+            </div>
+          </div>
+          <p className="text-lg font-bold mt-1">96%</p>
         </div>
-        <div className="bg-secondary rounded-lg p-3 text-center">
-          <p className="text-xs text-muted-foreground mb-1">Goal</p>
-          <p className="text-lg font-bold">90%</p>
+        <div className="bg-secondary rounded-lg p-3">
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-muted-foreground">Goal</p>
+            <a href="#" className="text-xs text-primary hover:underline flex items-center">
+              Details <ArrowRight size={12} className="ml-1" />
+            </a>
+          </div>
+          <p className="text-lg font-bold mt-1">90%</p>
         </div>
       </div>
     </div>
