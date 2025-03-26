@@ -34,7 +34,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function SalesChart() {
   return (
-    <div className="dashboard-card h-full animate-fade-in" style={{ animationDelay: '0.3s' }}>
+    <div className="dashboard-card w-full animate-fade-in" style={{ animationDelay: '0.3s' }}>
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-lg font-semibold">Sales & Profit</h2>
         <div className="flex items-center gap-2">
@@ -45,7 +45,7 @@ export function SalesChart() {
         </div>
       </div>
       
-      <div className="w-full h-[300px]">
+      <div className="w-full h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={data}
