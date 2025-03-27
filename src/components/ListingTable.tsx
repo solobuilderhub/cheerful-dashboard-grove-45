@@ -42,7 +42,7 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
   const listingItems: ListingItem[] = [
     {
       id: '1',
-      image: '/public/lovable-uploads/0d3e8293-937c-4cd1-a90e-fd09b11d7f6c.png',
+      image: 'https://images.stockx.com/images/Timberland-6-Inch-Premium-Waterproof-Boots-Wheat-Product.jpg',
       name: 'Timberland 6" Boot Just Don Denim (GS)',
       styleId: 'TB0NLKR/1184',
       size: '5.5Y',
@@ -59,7 +59,7 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
     },
     {
       id: '2',
-      image: '/public/lovable-uploads/0d3e8293-937c-4cd1-a90e-fd09b11d7f6c.png',
+      image: 'https://images.stockx.com/images/Timberland-6-Inch-Premium-Waterproof-Boots-Black-Nubuck-Product.jpg',
       name: 'Timberland 6" Boot Black Nubuck Premium',
       styleId: 'TB00073-009/TB00073-001/TB00073001-001/TB001',
       size: 'US M 9.5',
@@ -76,7 +76,7 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
     },
     {
       id: '3',
-      image: '/public/lovable-uploads/0d3e8293-937c-4cd1-a90e-fd09b11d7f6c.png',
+      image: 'https://images.stockx.com/images/Timberland-6-Inch-Premium-Waterproof-Boots-Black-Nubuck-Product.jpg',
       name: 'Timberland 6" Boot Black Nubuck Premium',
       styleId: 'TB00073-009/TB00073-001/TB00073001-001/TB001',
       size: 'US M 9.5',
@@ -93,7 +93,7 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
     },
     {
       id: '4',
-      image: '/public/lovable-uploads/0d3e8293-937c-4cd1-a90e-fd09b11d7f6c.png',
+      image: 'https://images.stockx.com/images/Timberland-6-Inch-Premium-Waterproof-Boots-Black-Nubuck-Product.jpg',
       name: 'Timberland 6" Boot Black Nubuck Premium',
       styleId: 'TB00073-009/TB00073-001/TB00073001-001/TB001',
       size: 'US M 9.5',
@@ -110,7 +110,7 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
     },
     {
       id: '5',
-      image: '/public/lovable-uploads/0d3e8293-937c-4cd1-a90e-fd09b11d7f6c.png',
+      image: 'https://images.stockx.com/images/Nike-Air-Max-1-Dark-Stucco-Product.jpg',
       name: 'Nike Air Max 1 SC Dark Stucco',
       styleId: 'NK12345-001',
       size: '8.5',
