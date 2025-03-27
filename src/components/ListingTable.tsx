@@ -10,6 +10,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Trash2 } from 'lucide-react';
 import { FilterValues } from './FilterModal';
 
@@ -186,13 +187,12 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
                 <Checkbox />
               </TableCell>
               <TableCell>
-                <div className="bg-secondary w-10 h-10 rounded flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={item.image} 
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+                <Avatar className="h-10 w-10 rounded">
+                  <AvatarImage src={item.image} alt={item.name} />
+                  <AvatarFallback className="bg-secondary text-xs">
+                    {item.name.substring(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
               </TableCell>
               <TableCell>
                 <div>
