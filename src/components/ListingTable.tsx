@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { 
@@ -11,7 +11,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Trash2 } from 'lucide-react';
+import { Trash2, ChevronDown, ChevronUp, Package } from 'lucide-react';
 import { FilterValues } from './FilterModal';
 
 interface ListingItem {
@@ -30,6 +30,14 @@ interface ListingItem {
   daysListed: number;
   lastUpdate: string;
   isExpired: boolean;
+}
+
+interface ProductGroup {
+  name: string;
+  styleId: string;
+  image: string;
+  variants: ListingItem[];
+  isOpen: boolean;
 }
 
 interface ListingTableProps {
@@ -128,6 +136,9 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
     }
   ];
 
+  // State to track which product groups are expanded
+  const [productGroups, setProductGroups] = useState<ProductGroup[]>([]);
+
   // Apply filters to the listing items
   let filteredItems = listingItems.filter(item => 
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -141,6 +152,42 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
       return true;
     });
   }
+
+  // Create product groups when viewMode is 'grouped'
+  React.useEffect(() => {
+    if (viewMode === 'grouped') {
+      // Group items by product name
+      const groupedByProduct: Record<string, ListingItem[]> = {};
+      
+      filteredItems.forEach(item => {
+        // Use name as the grouping key
+        const key = item.name;
+        if (!groupedByProduct[key]) {
+          groupedByProduct[key] = [];
+        }
+        groupedByProduct[key].push(item);
+      });
+      
+      // Convert the grouped object to array format
+      const groups: ProductGroup[] = Object.entries(groupedByProduct).map(([name, variants]) => ({
+        name,
+        styleId: variants[0].styleId.split('/')[0], // Use the first part of styleId as the group styleId
+        image: variants[0].image,
+        variants,
+        isOpen: false
+      }));
+      
+      setProductGroups(groups);
+    }
+  }, [filteredItems, viewMode]);
+
+  const toggleGroup = (index: number) => {
+    setProductGroups(prevGroups => 
+      prevGroups.map((group, i) => 
+        i === index ? { ...group, isOpen: !group.isOpen } : group
+      )
+    );
+  };
 
   const ActionButton = ({ expired }: { expired: boolean }) => {
     if (expired) {
@@ -157,6 +204,84 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
     );
   };
 
+  // Render simple view
+  if (viewMode === 'simple') {
+    return (
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-secondary/20">
+              <TableHead className="w-[40px]">
+                <Checkbox />
+              </TableHead>
+              <TableHead className="w-[60px]"></TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead className="text-center">Cost</TableHead>
+              <TableHead className="text-center">Your Ask</TableHead>
+              <TableHead className="text-center">Qty</TableHead>
+              <TableHead className="text-center">Highest Bid</TableHead>
+              <TableHead className="text-center">Lowest Ask</TableHead>
+              <TableHead className="text-center">Spread</TableHead>
+              <TableHead className="text-center">ROI</TableHead>
+              <TableHead className="text-center">Days Listed</TableHead>
+              <TableHead className="text-center">Last Update</TableHead>
+              <TableHead className="w-[120px]"></TableHead>
+              <TableHead className="w-[40px]"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredItems.map((item) => (
+              <TableRow key={item.id} className="border-b hover:bg-secondary/10">
+                <TableCell>
+                  <Checkbox />
+                </TableCell>
+                <TableCell>
+                  <Avatar className="h-10 w-10 rounded">
+                    <AvatarImage src={item.image} alt={item.name} />
+                    <AvatarFallback className="bg-secondary text-xs">
+                      {item.name.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell>
+                  <div>
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{item.styleId} Size: {item.size}</p>
+                  </div>
+                </TableCell>
+                <TableCell className="text-center font-medium">${item.cost}</TableCell>
+                <TableCell className="text-center">
+                  <div className="relative flex items-center justify-center">
+                    <span className="text-green-500 font-medium pr-2">$</span>
+                    <span className="font-medium">{item.yourAsk}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-center">{item.qty}</TableCell>
+                <TableCell className="text-center">${item.highestBid || '--'}</TableCell>
+                <TableCell className="text-center text-green-500">${item.lowestAsk || '--'}</TableCell>
+                <TableCell className={`text-center ${item.spread > 0 ? 'text-green-500' : item.spread < 0 ? 'text-red-500' : ''}`}>
+                  {item.spread > 0 ? `+${item.spread}` : item.spread}
+                </TableCell>
+                <TableCell className="text-center font-medium">{item.roi}</TableCell>
+                <TableCell className="text-center">{item.daysListed}</TableCell>
+                <TableCell className="text-center">{item.lastUpdate}</TableCell>
+                <TableCell>
+                  <ActionButton expired={item.isExpired} />
+                </TableCell>
+                <TableCell>
+                  <button className="text-muted-foreground hover:text-destructive transition-colors">
+                    <Trash2 size={16} />
+                  </button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
+
+  // Render grouped view
   return (
     <div className="overflow-x-auto">
       <Table>
@@ -166,65 +291,126 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
               <Checkbox />
             </TableHead>
             <TableHead className="w-[60px]"></TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead className="text-center">Cost</TableHead>
-            <TableHead className="text-center">Your Ask</TableHead>
-            <TableHead className="text-center">Qty</TableHead>
+            <TableHead>Product</TableHead>
+            <TableHead className="text-center">Variants</TableHead>
+            <TableHead className="text-center">Total Qty</TableHead>
+            <TableHead className="text-center">Price Range</TableHead>
             <TableHead className="text-center">Highest Bid</TableHead>
             <TableHead className="text-center">Lowest Ask</TableHead>
-            <TableHead className="text-center">Spread</TableHead>
-            <TableHead className="text-center">ROI</TableHead>
-            <TableHead className="text-center">Days Listed</TableHead>
-            <TableHead className="text-center">Last Update</TableHead>
-            <TableHead className="w-[120px]"></TableHead>
+            <TableHead className="text-center">ROI Range</TableHead>
             <TableHead className="w-[40px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredItems.map((item) => (
-            <TableRow key={item.id} className="border-b hover:bg-secondary/10">
-              <TableCell>
-                <Checkbox />
-              </TableCell>
-              <TableCell>
-                <Avatar className="h-10 w-10 rounded">
-                  <AvatarImage src={item.image} alt={item.name} />
-                  <AvatarFallback className="bg-secondary text-xs">
-                    {item.name.substring(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-              </TableCell>
-              <TableCell>
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{item.styleId} Size: {item.size}</p>
-                </div>
-              </TableCell>
-              <TableCell className="text-center font-medium">${item.cost}</TableCell>
-              <TableCell className="text-center">
-                <div className="relative flex items-center justify-center">
-                  <span className="text-green-500 font-medium pr-2">$</span>
-                  <span className="font-medium">{item.yourAsk}</span>
-                </div>
-              </TableCell>
-              <TableCell className="text-center">{item.qty}</TableCell>
-              <TableCell className="text-center">${item.highestBid || '--'}</TableCell>
-              <TableCell className="text-center text-green-500">${item.lowestAsk || '--'}</TableCell>
-              <TableCell className={`text-center ${item.spread > 0 ? 'text-green-500' : item.spread < 0 ? 'text-red-500' : ''}`}>
-                {item.spread > 0 ? `+${item.spread}` : item.spread}
-              </TableCell>
-              <TableCell className="text-center font-medium">{item.roi}</TableCell>
-              <TableCell className="text-center">{item.daysListed}</TableCell>
-              <TableCell className="text-center">{item.lastUpdate}</TableCell>
-              <TableCell>
-                <ActionButton expired={item.isExpired} />
-              </TableCell>
-              <TableCell>
-                <button className="text-muted-foreground hover:text-destructive transition-colors">
-                  <Trash2 size={16} />
-                </button>
-              </TableCell>
-            </TableRow>
+          {productGroups.map((group, index) => (
+            <React.Fragment key={`group-${index}`}>
+              <TableRow className="border-b hover:bg-secondary/5 cursor-pointer" onClick={() => toggleGroup(index)}>
+                <TableCell>
+                  <Checkbox />
+                </TableCell>
+                <TableCell>
+                  <Avatar className="h-10 w-10 rounded">
+                    <AvatarImage src={group.image} alt={group.name} />
+                    <AvatarFallback className="bg-secondary text-xs">
+                      {group.name.substring(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    <Package size={16} className="mr-2 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">{group.name}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Style ID: {group.styleId}</p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="text-center font-medium">{group.variants.length}</TableCell>
+                <TableCell className="text-center">
+                  {group.variants.reduce((sum, item) => sum + parseInt(item.qty.split('/')[0] || item.qty), 0)}
+                </TableCell>
+                <TableCell className="text-center">
+                  ${Math.min(...group.variants.map(v => v.yourAsk))} - ${Math.max(...group.variants.map(v => v.yourAsk))}
+                </TableCell>
+                <TableCell className="text-center">
+                  ${Math.max(...group.variants.map(v => v.highestBid || 0))}
+                </TableCell>
+                <TableCell className="text-center text-green-500">
+                  ${Math.min(...group.variants.filter(v => v.lowestAsk !== null).map(v => v.lowestAsk || Infinity))}
+                </TableCell>
+                <TableCell className="text-center">
+                  {Math.min(...group.variants.map(v => parseInt(v.roi)))}% - {Math.max(...group.variants.map(v => parseInt(v.roi)))}%
+                </TableCell>
+                <TableCell>
+                  {group.isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </TableCell>
+              </TableRow>
+              
+              {group.isOpen && (
+                <TableRow className="bg-secondary/5">
+                  <TableCell colSpan={10} className="p-0">
+                    <div className="py-2 px-4">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-secondary/10">
+                            <TableHead className="w-[40px]">
+                              <Checkbox />
+                            </TableHead>
+                            <TableHead>Size</TableHead>
+                            <TableHead className="text-center">Cost</TableHead>
+                            <TableHead className="text-center">Your Ask</TableHead>
+                            <TableHead className="text-center">Qty</TableHead>
+                            <TableHead className="text-center">Highest Bid</TableHead>
+                            <TableHead className="text-center">Lowest Ask</TableHead>
+                            <TableHead className="text-center">Spread</TableHead>
+                            <TableHead className="text-center">ROI</TableHead>
+                            <TableHead className="text-center">Days Listed</TableHead>
+                            <TableHead className="w-[120px]"></TableHead>
+                            <TableHead className="w-[40px]"></TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {group.variants.map((item) => (
+                            <TableRow key={item.id} className="border-b border-secondary/10 hover:bg-secondary/10">
+                              <TableCell>
+                                <Checkbox />
+                              </TableCell>
+                              <TableCell>
+                                <p className="font-medium">{item.size}</p>
+                                <p className="text-xs text-muted-foreground">{item.styleId}</p>
+                              </TableCell>
+                              <TableCell className="text-center font-medium">${item.cost}</TableCell>
+                              <TableCell className="text-center">
+                                <div className="relative flex items-center justify-center">
+                                  <span className="text-green-500 font-medium pr-2">$</span>
+                                  <span className="font-medium">{item.yourAsk}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">{item.qty}</TableCell>
+                              <TableCell className="text-center">${item.highestBid || '--'}</TableCell>
+                              <TableCell className="text-center text-green-500">${item.lowestAsk || '--'}</TableCell>
+                              <TableCell className={`text-center ${item.spread > 0 ? 'text-green-500' : item.spread < 0 ? 'text-red-500' : ''}`}>
+                                {item.spread > 0 ? `+${item.spread}` : item.spread}
+                              </TableCell>
+                              <TableCell className="text-center font-medium">{item.roi}</TableCell>
+                              <TableCell className="text-center">{item.daysListed}</TableCell>
+                              <TableCell>
+                                <ActionButton expired={item.isExpired} />
+                              </TableCell>
+                              <TableCell>
+                                <button className="text-muted-foreground hover:text-destructive transition-colors">
+                                  <Trash2 size={16} />
+                                </button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </React.Fragment>
           ))}
         </TableBody>
       </Table>
