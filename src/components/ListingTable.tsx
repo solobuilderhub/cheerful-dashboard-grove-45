@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { 
@@ -138,6 +138,7 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
 
   // State to track which product groups are expanded
   const [productGroups, setProductGroups] = useState<ProductGroup[]>([]);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
   // Apply filters to the listing items
   let filteredItems = listingItems.filter(item => 
@@ -154,7 +155,7 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
   }
 
   // Create product groups when viewMode is 'grouped'
-  React.useEffect(() => {
+  useEffect(() => {
     if (viewMode === 'grouped') {
       // Group items by product name
       const groupedByProduct: Record<string, ListingItem[]> = {};
@@ -178,15 +179,21 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
       }));
       
       setProductGroups(groups);
+      
+      // Initialize expanded state for each group
+      const newExpandedGroups: Record<string, boolean> = {};
+      groups.forEach((group, index) => {
+        newExpandedGroups[index.toString()] = false;
+      });
+      setExpandedGroups(newExpandedGroups);
     }
   }, [filteredItems, viewMode]);
 
   const toggleGroup = (index: number) => {
-    setProductGroups(prevGroups => 
-      prevGroups.map((group, i) => 
-        i === index ? { ...group, isOpen: !group.isOpen } : group
-      )
-    );
+    setExpandedGroups(prev => ({
+      ...prev,
+      [index.toString()]: !prev[index.toString()]
+    }));
   };
 
   const ActionButton = ({ expired }: { expired: boolean }) => {
@@ -304,7 +311,10 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
         <TableBody>
           {productGroups.map((group, index) => (
             <React.Fragment key={`group-${index}`}>
-              <TableRow className="border-b hover:bg-secondary/5 cursor-pointer" onClick={() => toggleGroup(index)}>
+              <TableRow 
+                className="border-b hover:bg-secondary/5 cursor-pointer" 
+                onClick={() => toggleGroup(index)}
+              >
                 <TableCell>
                   <Checkbox />
                 </TableCell>
@@ -342,11 +352,11 @@ export function ListingTable({ searchQuery, filters, viewMode }: ListingTablePro
                   {Math.min(...group.variants.map(v => parseInt(v.roi)))}% - {Math.max(...group.variants.map(v => parseInt(v.roi)))}%
                 </TableCell>
                 <TableCell>
-                  {group.isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  {expandedGroups[index.toString()] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 </TableCell>
               </TableRow>
               
-              {group.isOpen && (
+              {expandedGroups[index.toString()] && (
                 <TableRow className="bg-secondary/5">
                   <TableCell colSpan={10} className="p-0">
                     <div className="py-2 px-4">
