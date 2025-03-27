@@ -5,9 +5,17 @@ import { Input } from "@/components/ui/input";
 import { Filter, Search, Upload, Trash2 } from 'lucide-react';
 import { InventoryTable } from './InventoryTable';
 import { MasterInventoryUpload } from './MasterInventoryUpload';
+import { FilterModal, FilterValues } from './FilterModal';
 
 export function InventoryContent() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+
+  const handleApplyFilters = (filters: FilterValues) => {
+    setAppliedFilters(filters);
+    // You can also pass these filters to the InventoryTable component
+  };
 
   return (
     <main className="flex-1 overflow-y-auto p-6 bg-background">
@@ -20,7 +28,12 @@ export function InventoryContent() {
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold">Standard Listings</h2>
             <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="gap-1.5">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-1.5"
+                onClick={() => setIsFilterOpen(true)}
+              >
                 <Filter size={16} />
                 Filter
               </Button>
@@ -36,9 +49,15 @@ export function InventoryContent() {
             </div>
           </div>
           
-          <InventoryTable searchQuery={searchQuery} />
+          <InventoryTable searchQuery={searchQuery} filters={appliedFilters} />
         </div>
       </div>
+
+      <FilterModal 
+        open={isFilterOpen} 
+        onOpenChange={setIsFilterOpen} 
+        onApplyFilters={handleApplyFilters} 
+      />
     </main>
   );
 }

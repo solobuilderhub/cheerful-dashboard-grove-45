@@ -10,6 +10,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Trash2 } from 'lucide-react';
+import { FilterValues } from './FilterModal';
 
 interface InventoryItem {
   id: string;
@@ -21,13 +22,18 @@ interface InventoryItem {
   dateAdded: string;
   warehouseLocation: string;
   cost: string;
+  daysListed?: number;
+  spread?: number;
+  isLowestAsk?: boolean;
+  isExpired?: boolean;
 }
 
 interface InventoryTableProps {
   searchQuery: string;
+  filters?: FilterValues | null;
 }
 
-export function InventoryTable({ searchQuery }: InventoryTableProps) {
+export function InventoryTable({ searchQuery, filters }: InventoryTableProps) {
   // Sample data for the inventory items
   const inventoryItems: InventoryItem[] = [
     {
@@ -39,7 +45,11 @@ export function InventoryTable({ searchQuery }: InventoryTableProps) {
       quantity: 10,
       dateAdded: '01/01/2025',
       warehouseLocation: 'Northeast',
-      cost: '$95.00'
+      cost: '$95.00',
+      daysListed: 15,
+      spread: 25,
+      isLowestAsk: true,
+      isExpired: false
     },
     {
       id: '2',
@@ -50,7 +60,11 @@ export function InventoryTable({ searchQuery }: InventoryTableProps) {
       quantity: 12,
       dateAdded: '01/01/2025',
       warehouseLocation: 'Midwest',
-      cost: '$120.00'
+      cost: '$120.00',
+      daysListed: 5,
+      spread: 40,
+      isLowestAsk: false,
+      isExpired: false
     },
     {
       id: '3',
@@ -61,7 +75,11 @@ export function InventoryTable({ searchQuery }: InventoryTableProps) {
       quantity: 15,
       dateAdded: '02/01/2025',
       warehouseLocation: 'West',
-      cost: '$120.00'
+      cost: '$120.00',
+      daysListed: 30,
+      spread: 10,
+      isLowestAsk: true,
+      isExpired: true
     },
     {
       id: '4',
@@ -72,7 +90,11 @@ export function InventoryTable({ searchQuery }: InventoryTableProps) {
       quantity: 18,
       dateAdded: '03/01/2025',
       warehouseLocation: 'South',
-      cost: '$120.00'
+      cost: '$120.00',
+      daysListed: 3,
+      spread: 50,
+      isLowestAsk: false,
+      isExpired: false
     },
     {
       id: '5',
@@ -83,15 +105,48 @@ export function InventoryTable({ searchQuery }: InventoryTableProps) {
       quantity: 8,
       dateAdded: '03/15/2025',
       warehouseLocation: 'Central',
-      cost: '$110.00'
+      cost: '$110.00',
+      daysListed: 20,
+      spread: 35,
+      isLowestAsk: true,
+      isExpired: true
     }
   ];
 
-  // Filter items based on search query
-  const filteredItems = inventoryItems.filter(item => 
+  // Apply filters to the inventory items
+  let filteredItems = inventoryItems.filter(item => 
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     item.styleId.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Apply additional filters if they exist
+  if (filters) {
+    filteredItems = filteredItems.filter(item => {
+      // Spread filter
+      if (filters.spreadType === 'greater' && (item.spread || 0) < filters.spreadValue) {
+        return false;
+      }
+
+      // Days Listed filter
+      if (filters.daysListedType === 'greater' && (item.daysListed || 0) < filters.daysListedValue) {
+        return false;
+      }
+
+      // Lowest Ask filter
+      if (filters.lowestAsk === 'lowestAsk' && !item.isLowestAsk) {
+        return false;
+      } else if (filters.lowestAsk === 'notLowestAsk' && item.isLowestAsk) {
+        return false;
+      }
+
+      // Expired filter
+      if (filters.showOnlyExpired && !item.isExpired) {
+        return false;
+      }
+
+      return true;
+    });
+  }
 
   return (
     <div className="overflow-x-auto">
