@@ -66,9 +66,10 @@ export interface InventoryItem {
 interface InventoryTableProps {
   searchQuery: string;
   filters?: FilterValues | null;
+  onViewItem: (item: InventoryItem) => void;
 }
 
-export function InventoryTable({ searchQuery, filters }: InventoryTableProps) {
+export function InventoryTable({ searchQuery, filters, onViewItem }: InventoryTableProps) {
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
@@ -433,7 +434,7 @@ export function InventoryTable({ searchQuery, filters }: InventoryTableProps) {
                       variant="ghost" 
                       size="icon" 
                       className="text-muted-foreground hover:text-primary"
-                      onClick={() => handleViewItem(item)}
+                      onClick={() => onViewItem(item)}
                     >
                       <Eye size={16} />
                     </Button>
