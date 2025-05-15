@@ -4,7 +4,7 @@ import { SideNav } from '@/components/SideNav';
 import { InventoryContent } from '@/components/InventoryContent';
 import { Toaster } from "@/components/ui/toaster";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Warehouse } from 'lucide-react';
+import { Warehouse, Home } from 'lucide-react';
 
 const Inventory = () => {
   return (
@@ -15,7 +15,10 @@ const Inventory = () => {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                <BreadcrumbLink href="/" className="flex items-center">
+                  <Home className="h-4 w-4 mr-1" />
+                  Dashboard
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>

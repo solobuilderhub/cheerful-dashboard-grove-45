@@ -6,14 +6,22 @@ import { Filter, Search, Upload, Plus, Package } from 'lucide-react';
 import { InventoryTable } from './InventoryTable';
 import { MasterInventoryUpload } from './MasterInventoryUpload';
 import { FilterModal, FilterValues } from './FilterModal';
+import { InventoryDetailSheet } from './InventoryDetailSheet';
 
 export function InventoryContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const handleApplyFilters = (filters: FilterValues) => {
     setAppliedFilters(filters);
+  };
+
+  const handleViewItem = (item) => {
+    setSelectedItem(item);
+    setIsDetailOpen(true);
   };
 
   return (
@@ -58,7 +66,11 @@ export function InventoryContent() {
               <span>Click on the view icon to see detailed item information and marketplace listings</span>
             </div>
             
-            <InventoryTable searchQuery={searchQuery} filters={appliedFilters} />
+            <InventoryTable 
+              searchQuery={searchQuery} 
+              filters={appliedFilters} 
+              onViewItem={handleViewItem}
+            />
           </div>
         </div>
       </div>
@@ -67,6 +79,12 @@ export function InventoryContent() {
         open={isFilterOpen} 
         onOpenChange={setIsFilterOpen} 
         onApplyFilters={handleApplyFilters} 
+      />
+
+      <InventoryDetailSheet 
+        open={isDetailOpen}
+        onOpenChange={setIsDetailOpen}
+        item={selectedItem}
       />
     </main>
   );
