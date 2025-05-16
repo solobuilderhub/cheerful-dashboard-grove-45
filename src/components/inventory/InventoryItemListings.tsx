@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Package, ListOrdered, RefreshCw } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Package, ListOrdered } from 'lucide-react';
 import { StockXListings, StockXListing } from './StockXListings';
 import { GoatListings, GoatListing } from './GoatListings';
+import { InventoryListingsHeader } from './InventoryListingsHeader';
 
 interface InventoryItemListingsProps {
   styleId: string;
@@ -14,7 +12,6 @@ interface InventoryItemListingsProps {
 }
 
 export function InventoryItemListings({ styleId, name }: InventoryItemListingsProps) {
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('stockx');
   const [isLoading, setIsLoading] = useState(false);
   
@@ -123,39 +120,16 @@ export function InventoryItemListings({ styleId, name }: InventoryItemListingsPr
     }
   ];
 
-  const handleRefreshListings = () => {
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Listings refreshed",
-        description: "All marketplace listings have been refreshed.",
-      });
-    }, 1500);
-  };
-
   const lastUpdated = new Date().toISOString();
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-semibold">{name} - Marketplace Listings</h2>
-          <p className="text-sm text-muted-foreground">Style ID: {styleId}</p>
-        </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="gap-1.5"
-          onClick={handleRefreshListings}
-          disabled={isLoading}
-        >
-          <RefreshCw size={16} className={isLoading ? "animate-spin" : ""} />
-          Refresh Listings
-        </Button>
-      </div>
+      <InventoryListingsHeader 
+        styleId={styleId}
+        name={name}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
