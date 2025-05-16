@@ -5,7 +5,7 @@ import { InventoryItemSummary } from './InventoryItemSummary';
 import { InventoryItemDetails } from './InventoryItemDetails';
 import { InventoryItemVariants } from './InventoryItemVariants';
 import { InventoryItemMarketplace } from './InventoryItemMarketplace';
-import { InventoryItemListings } from '@/components/InventoryItemListings';
+import { InventoryItemListings } from './InventoryItemListings';
 import { List } from 'lucide-react';
 
 interface InventoryDetailTabsProps {
