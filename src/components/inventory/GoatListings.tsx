@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -11,8 +11,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, ExternalLink } from 'lucide-react';
+import { DollarSign, ExternalLink, Eye } from 'lucide-react';
 import { formatTimeAgo, formatPrice, getStatusClass } from './listing-utils';
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ListingOrderDetail } from './ListingOrderDetail';
 
 // GOAT listing interface
 export interface GoatListing {
@@ -29,7 +31,7 @@ export interface GoatListing {
   status: string;
   price_cents: string;
   activated_at: string;
-  defects: string[];
+  defects: any[];
   additional_defects: string;
 }
 
@@ -39,17 +41,19 @@ interface GoatListingsProps {
 }
 
 export function GoatListings({ listings, lastUpdated }: GoatListingsProps) {
+  const [selectedListing, setSelectedListing] = useState<GoatListing | null>(null);
+  
   // Get a status badge component based on status string
   const getStatusBadge = (status: string) => {
-    return <Badge variant="outline" className={getStatusClass(status)}>{status.replace('LISTING_STATUS_', '')}</Badge>;
+    return <Badge variant="outline" className={getStatusClass(status)}>{status}</Badge>;
   };
 
-  // Format condition text
-  const formatCondition = (condition: string) => {
-    if (condition === 'CONDITION_NEW') return 'New';
-    if (condition === 'CONDITION_USED') return 'Used';
-    if (condition === 'CONDITION_NEW_WITH_DEFECTS') return 'New w/ Defects';
-    return condition;
+  // Convert GOAT listing to order format for detail view
+  const getOrderFromListing = (listing: GoatListing) => {
+    // In a real app, you might fetch the actual order details from an API
+    return {
+      ...listing
+    };
   };
 
   return (
@@ -66,8 +70,8 @@ export function GoatListings({ listings, lastUpdated }: GoatListingsProps) {
             <TableRow>
               <TableHead>Size</TableHead>
               <TableHead>Price</TableHead>
-              <TableHead>Status</TableHead>
               <TableHead>Condition</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Listed</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -75,15 +79,34 @@ export function GoatListings({ listings, lastUpdated }: GoatListingsProps) {
           <TableBody>
             {listings.map((listing) => (
               <TableRow key={listing.id}>
-                <TableCell className="font-medium">
-                  {listing.size} {listing.size_unit.replace('SIZE_UNIT_', '')}
-                </TableCell>
+                <TableCell className="font-medium">US {listing.size}</TableCell>
                 <TableCell className="font-medium">{formatPrice(listing.price_cents)}</TableCell>
+                <TableCell>{listing.condition.replace('CONDITION_', '')}</TableCell>
                 <TableCell>{getStatusBadge(listing.status)}</TableCell>
-                <TableCell>{formatCondition(listing.condition)}</TableCell>
                 <TableCell>{formatTimeAgo(listing.created_at)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-8 w-8 p-0"
+                          onClick={() => setSelectedListing(listing)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="w-full max-w-3xl">
+                        {selectedListing && (
+                          <ListingOrderDetail
+                            order={getOrderFromListing(selectedListing)}
+                            platform="goat"
+                            onClose={() => setSelectedListing(null)}
+                          />
+                        )}
+                      </DialogContent>
+                    </Dialog>
                     <Button size="sm" variant="outline" className="h-8 w-8 p-0">
                       <DollarSign className="h-4 w-4" />
                     </Button>

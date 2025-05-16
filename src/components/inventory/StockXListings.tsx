@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -11,8 +11,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, ExternalLink } from 'lucide-react';
+import { DollarSign, ExternalLink, Eye } from 'lucide-react';
 import { formatTimeAgo, formatPrice, getStatusClass } from './listing-utils';
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ListingOrderDetail } from './ListingOrderDetail';
 
 // StockX listing interface
 export interface StockXListing {
@@ -54,9 +56,29 @@ interface StockXListingsProps {
 }
 
 export function StockXListings({ listings, lastUpdated }: StockXListingsProps) {
+  const [selectedListing, setSelectedListing] = useState<StockXListing | null>(null);
+  
   // Get a status badge component based on status string
   const getStatusBadge = (status: string) => {
     return <Badge variant="outline" className={getStatusClass(status)}>{status}</Badge>;
+  };
+
+  // Convert listing to order format for detail view
+  const getOrderFromListing = (listing: StockXListing) => {
+    // This function transforms a listing into an order format
+    // In a real app, you might fetch the actual order from an API
+    return {
+      askId: listing.ask.askId,
+      listingId: listing.listingId,
+      amount: listing.amount,
+      currencyCode: listing.currencyCode,
+      createdAt: listing.createdAt,
+      updatedAt: listing.updatedAt,
+      variant: listing.variant,
+      product: listing.product,
+      status: listing.status,
+      inventoryType: listing.inventoryType
+    };
   };
 
   return (
@@ -89,6 +111,27 @@ export function StockXListings({ listings, lastUpdated }: StockXListingsProps) {
                 <TableCell>{formatTimeAgo(listing.ask.askExpiresAt)}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-8 w-8 p-0"
+                          onClick={() => setSelectedListing(listing)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="w-full max-w-3xl">
+                        {selectedListing && (
+                          <ListingOrderDetail
+                            order={getOrderFromListing(selectedListing)}
+                            platform="stockx"
+                            onClose={() => setSelectedListing(null)}
+                          />
+                        )}
+                      </DialogContent>
+                    </Dialog>
                     <Button size="sm" variant="outline" className="h-8 w-8 p-0">
                       <DollarSign className="h-4 w-4" />
                     </Button>
