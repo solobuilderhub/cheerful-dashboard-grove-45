@@ -103,9 +103,9 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
 
   return (
     <div className="space-y-4">
-      <div className="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-100 shadow-sm">
-        <h3 className="font-semibold text-blue-800 mb-2">Available Variants</h3>
-        <p className="text-sm text-blue-600">
+      <div className="mb-6 bg-card p-4 rounded-lg border border-border shadow-sm">
+        <h3 className="font-semibold text-foreground mb-2">Available Variants</h3>
+        <p className="text-sm text-muted-foreground">
           {(variations?.length || 0)} size variants available. Click on a variant to see detailed information.
         </p>
       </div>
