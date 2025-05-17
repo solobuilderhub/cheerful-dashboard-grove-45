@@ -5,16 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StockXListings } from './StockXListings';
 import { GoatListings } from './GoatListings';
 import { Badge } from '@/components/ui/badge';
-
-interface Variant {
-  _id: string;
-  variantId: string;
-  variantName: string;
-  variantValue: string;
-  size: string;
-  sizeChart?: any;
-  quantity?: number;
-}
+import { Variant } from '@/components/inventory-drawer/types';
+import { useStockXListings, useGoatListings } from '@/hooks/use-listings-data';
 
 interface VariantListingsDialogProps {
   open: boolean;
@@ -30,6 +22,10 @@ export function VariantListingsDialog({
   styleId 
 }: VariantListingsDialogProps) {
   const [activeTab, setActiveTab] = useState('stockx');
+  
+  // Use our custom hooks to fetch listings
+  const { data: stockXListings, isLoading: isLoadingStockX } = useStockXListings(variant?.variantId);
+  const { data: goatListings, isLoading: isLoadingGoat } = useGoatListings(variant?.size);
 
   if (!variant) return null;
 
@@ -51,7 +47,8 @@ export function VariantListingsDialog({
           
           <TabsContent value="stockx" className="mt-4">
             <StockXListings 
-              listings={[]} 
+              listings={stockXListings || []}
+              isLoading={isLoadingStockX}
               lastUpdated={new Date().toISOString()} 
               filterByVariantId={variant.variantId}
             />
@@ -59,7 +56,8 @@ export function VariantListingsDialog({
           
           <TabsContent value="goat" className="mt-4">
             <GoatListings 
-              listings={[]} 
+              listings={goatListings || []}
+              isLoading={isLoadingGoat}
               lastUpdated={new Date().toISOString()} 
               filterBySize={variant.size}
             />

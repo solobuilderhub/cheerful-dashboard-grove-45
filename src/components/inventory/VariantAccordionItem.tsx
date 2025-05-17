@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   AccordionContent, 
@@ -10,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Package, LineChart, Eye, Tag, Truck } from 'lucide-react';
 import { InventoryQuantityControl } from './InventoryQuantityControl';
+import { Variant } from '@/components/inventory-drawer/types';
 
 interface SizeChart {
   defaultConversion: {
@@ -38,6 +38,7 @@ interface VariantAccordionItemProps {
   onViewMarketData: (variant: Variant) => void;
   onViewListings: (variant: Variant) => void;
   onQuantityChange?: (variantId: string, newQuantity: number) => void;
+  itemId?: string;
 }
 
 export function VariantAccordionItem({ 
@@ -45,7 +46,8 @@ export function VariantAccordionItem({
   onListItem, 
   onViewMarketData,
   onViewListings,
-  onQuantityChange
+  onQuantityChange,
+  itemId = '1'
 }: VariantAccordionItemProps) {
   const [activeTab, setActiveTab] = useState<'conversions' | 'actions'>('actions');
   
@@ -70,6 +72,7 @@ export function VariantAccordionItem({
                 initialQuantity={variant.quantity || 1}
                 variantId={variant.variantId}
                 onQuantityChange={onQuantityChange}
+                itemId={itemId}
               />
             </div>
           </div>

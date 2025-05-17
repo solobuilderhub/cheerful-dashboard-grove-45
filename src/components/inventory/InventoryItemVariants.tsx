@@ -5,71 +5,21 @@ import { VariantAccordionItem } from './VariantAccordionItem';
 import { VariantListingsDialog } from './VariantListingsDialog';
 import { MarketDataDialog } from './MarketDataDialog';
 import { useToast } from '@/hooks/use-toast';
-
-interface SizeChart {
-  defaultConversion: {
-    size: string;
-    type: string;
-  };
-  availableConversions: Array<{
-    size: string;
-    type: string;
-  }>;
-}
-
-interface Variant {
-  _id: string;
-  variantId: string;
-  variantName: string;
-  variantValue: string;
-  size: string;
-  sizeChart?: SizeChart;
-  quantity?: number;
-}
+import { Variant } from '@/components/inventory-drawer/types';
 
 interface InventoryItemVariantsProps {
   variations?: Variant[];
   handleListItem: (platform: 'stockx' | 'goat', variantId?: string) => void;
   styleId: string;
+  itemId?: string;
 }
 
-// Mock market data - in a real app this would come from an API
-const mockStockXMarketData = {
-  productId: "b80ff5b5-98ab-40ff-a58c-83f6962fe8aa",
-  variantId: "a09ff70f-48ca-4abd-a23a-a0fd716a4dff",
-  currencyCode: "USD",
-  highestBidAmount: "15",
-  lowestAskAmount: "158",
-  flexLowestAskAmount: null
-};
-
-// Mock GOAT market data
-const mockGoatMarketData = [
-  {
-    size: 9,
-    product_condition: "PRODUCT_CONDITION_NEW",
-    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
-    availability: {
-      lowest_listing_price_cents: "15800",
-      highest_offer_price_cents: "14000",
-      last_sold_listing_price_cents: "16500",
-      global_indicator_price_cents: "17000"
-    }
-  },
-  {
-    size: 10,
-    product_condition: "PRODUCT_CONDITION_NEW",
-    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
-    availability: {
-      lowest_listing_price_cents: "16800",
-      highest_offer_price_cents: "15000",
-      last_sold_listing_price_cents: "17200",
-      global_indicator_price_cents: "18000"
-    }
-  }
-];
-
-export function InventoryItemVariants({ variations, handleListItem, styleId }: InventoryItemVariantsProps) {
+export function InventoryItemVariants({ 
+  variations, 
+  handleListItem, 
+  styleId,
+  itemId = '1'
+}: InventoryItemVariantsProps) {
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
   const [showListingsDialog, setShowListingsDialog] = useState<boolean>(false);
   const [showMarketDataDialog, setShowMarketDataDialog] = useState<boolean>(false);
@@ -89,10 +39,11 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
 
   // Function to handle quantity updates
   const handleQuantityChange = (variantId: string, newQuantity: number) => {
-    // In a real app, this would update the backend
+    // In a real app, this would update the backend via our hooks
+    // The actual API call is now handled in the InventoryQuantityControl component
     console.log(`Updated quantity for variant ${variantId} to ${newQuantity}`);
     
-    // Show a toast notification
+    // For backward compatibility, still show a toast notification
     toast({
       title: "Quantity updated",
       description: `Inventory quantity for Size ${
@@ -121,6 +72,7 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
                 onViewMarketData={handleViewMarketData}
                 onViewListings={handleViewListings}
                 onQuantityChange={handleQuantityChange}
+                itemId={itemId}
               />
             ))}
           </Accordion>
@@ -147,8 +99,6 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
           open={showMarketDataDialog}
           onOpenChange={(open) => setShowMarketDataDialog(open)}
           variant={selectedVariant}
-          stockXData={mockStockXMarketData}
-          goatData={mockGoatMarketData}
         />
       )}
     </div>
