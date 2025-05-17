@@ -11,7 +11,7 @@ const Inventory = () => {
     <div className="flex h-screen w-full overflow-hidden">
       <SideNav />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="border-b bg-card/50 px-6 py-3">
+        <header className="border-b bg-card/50 px-6 py-3">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -29,7 +29,7 @@ const Inventory = () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-        </div>
+        </header>
         <InventoryContent />
       </div>
       <Toaster />

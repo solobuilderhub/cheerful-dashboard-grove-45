@@ -31,7 +31,8 @@ export function InventoryDetailTabs({
       <TabsContent value="variants" className="space-y-4">
         <InventoryItemVariants 
           variations={item.variations} 
-          handleListItem={handleListItem} 
+          handleListItem={handleListItem}
+          styleId={item.styleId} 
         />
       </TabsContent>
     </Tabs>
