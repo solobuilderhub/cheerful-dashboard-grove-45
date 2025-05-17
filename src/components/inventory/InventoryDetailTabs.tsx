@@ -3,6 +3,7 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InventoryItemDetails } from './InventoryItemDetails';
 import { InventoryItemVariants } from './InventoryItemVariants';
+import { InventoryItemListings } from './InventoryItemListings';
 
 interface InventoryDetailTabsProps {
   item: any;
@@ -19,7 +20,7 @@ export function InventoryDetailTabs({
 }: InventoryDetailTabsProps) {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-      <TabsList className="grid grid-cols-2 mb-6 bg-secondary/10">
+      <TabsList className="grid grid-cols-3 mb-6 bg-secondary/10">
         <TabsTrigger 
           value="details" 
           className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
@@ -30,7 +31,13 @@ export function InventoryDetailTabs({
           value="variants"
           className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
         >
-          Variants & Market Data
+          Variants
+        </TabsTrigger>
+        <TabsTrigger 
+          value="listings"
+          className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+        >
+          Listings
         </TabsTrigger>
       </TabsList>
       
@@ -43,6 +50,13 @@ export function InventoryDetailTabs({
           variations={item.variations} 
           handleListItem={handleListItem}
           styleId={item.styleId} 
+        />
+      </TabsContent>
+      
+      <TabsContent value="listings" className="space-y-4">
+        <InventoryItemListings
+          styleId={item.styleId}
+          name={item.name}
         />
       </TabsContent>
     </Tabs>

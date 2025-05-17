@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { Accordion } from '@/components/ui/accordion';
-import { MarketDataCard } from './MarketDataCard';
 import { VariantAccordionItem } from './VariantAccordionItem';
 import { VariantListingsDialog } from './VariantListingsDialog';
+import { MarketDataDialog } from './MarketDataDialog';
 import { useToast } from '@/hooks/use-toast';
 
 interface SizeChart {
@@ -71,21 +71,14 @@ const mockGoatMarketData = [
 
 export function InventoryItemVariants({ variations, handleListItem, styleId }: InventoryItemVariantsProps) {
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
-  const [loadingMarketData, setLoadingMarketData] = useState<boolean>(false);
   const [showListingsDialog, setShowListingsDialog] = useState<boolean>(false);
-  const [showMarketData, setShowMarketData] = useState<boolean>(false);
+  const [showMarketDataDialog, setShowMarketDataDialog] = useState<boolean>(false);
   const { toast } = useToast();
 
-  // Function to fetch market data for a variant
+  // Function to handle viewing market data for a variant
   const handleViewMarketData = (variant: Variant) => {
     setSelectedVariant(variant);
-    setLoadingMarketData(true);
-    setShowMarketData(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setLoadingMarketData(false);
-    }, 800);
+    setShowMarketDataDialog(true);
   };
 
   // Function to handle viewing listings for a variant
@@ -99,73 +92,65 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
     // In a real app, this would update the backend
     console.log(`Updated quantity for variant ${variantId} to ${newQuantity}`);
     
-    // Update the local state if needed
-    if (variations) {
-      // This would be better implemented with proper state management
-      // For now, just show a toast notification
-      toast({
-        title: "Quantity updated",
-        description: `Inventory quantity for Size ${
-          variations.find(v => v.variantId === variantId)?.size || ''
-        } has been updated to ${newQuantity}`,
-      });
-    }
+    // Show a toast notification
+    toast({
+      title: "Quantity updated",
+      description: `Inventory quantity for Size ${
+        variations?.find(v => v.variantId === variantId)?.size || ''
+      } has been updated to ${newQuantity}`,
+    });
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="md:col-span-2">
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2">Available Variants</h3>
-          <p className="text-sm text-muted-foreground">
-            {(variations?.length || 0)} size variants available
-          </p>
-        </div>
-        
-        {variations && variations.length > 0 ? (
-          <div className="space-y-2">
-            <Accordion type="single" collapsible className="space-y-2 border-0">
-              {variations.map((variant) => (
-                <VariantAccordionItem
-                  key={variant.variantId}
-                  variant={variant}
-                  onListItem={handleListItem}
-                  onViewMarketData={handleViewMarketData}
-                  onViewListings={handleViewListings}
-                  onQuantityChange={handleQuantityChange}
-                />
-              ))}
-            </Accordion>
-          </div>
-        ) : (
-          <div className="text-center py-6 border rounded-md">
-            <p className="text-muted-foreground">No variant information available</p>
-          </div>
-        )}
+    <div className="space-y-4">
+      <div className="mb-6 bg-blue-50 p-4 rounded-lg border border-blue-100 shadow-sm">
+        <h3 className="font-semibold text-blue-800 mb-2">Available Variants</h3>
+        <p className="text-sm text-blue-600">
+          {(variations?.length || 0)} size variants available. Click on a variant to see detailed information.
+        </p>
       </div>
       
-      {/* Market Data Section - Now shows on the right side */}
-      <div className="md:col-span-1 relative">
-        {selectedVariant && showMarketData && (
-          <div className="sticky top-4">
-            <MarketDataCard
-              stockXData={mockStockXMarketData}
-              goatData={mockGoatMarketData}
-              selectedSize={selectedVariant.size}
-              isLoading={loadingMarketData}
-              onClose={() => setShowMarketData(false)}
-            />
-          </div>
-        )}
-      </div>
+      {variations && variations.length > 0 ? (
+        <div className="space-y-3">
+          <Accordion type="single" collapsible className="space-y-3">
+            {variations.map((variant) => (
+              <VariantAccordionItem
+                key={variant.variantId}
+                variant={variant}
+                onListItem={handleListItem}
+                onViewMarketData={handleViewMarketData}
+                onViewListings={handleViewListings}
+                onQuantityChange={handleQuantityChange}
+              />
+            ))}
+          </Accordion>
+        </div>
+      ) : (
+        <div className="text-center py-6 border rounded-md">
+          <p className="text-muted-foreground">No variant information available</p>
+        </div>
+      )}
 
       {/* Variant Listings Dialog */}
-      <VariantListingsDialog
-        open={showListingsDialog}
-        onOpenChange={(open) => setShowListingsDialog(open)}
-        variant={selectedVariant}
-        styleId={styleId}
-      />
+      {selectedVariant && (
+        <VariantListingsDialog
+          open={showListingsDialog}
+          onOpenChange={(open) => setShowListingsDialog(open)}
+          variant={selectedVariant}
+          styleId={styleId}
+        />
+      )}
+
+      {/* Market Data Dialog */}
+      {selectedVariant && (
+        <MarketDataDialog
+          open={showMarketDataDialog}
+          onOpenChange={(open) => setShowMarketDataDialog(open)}
+          variant={selectedVariant}
+          stockXData={mockStockXMarketData}
+          goatData={mockGoatMarketData}
+        />
+      )}
     </div>
   );
 }

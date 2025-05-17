@@ -8,7 +8,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, LineChart, Eye } from 'lucide-react';
+import { Package, LineChart, Eye, Tag, Truck } from 'lucide-react';
 import { InventoryQuantityControl } from './InventoryQuantityControl';
 
 interface SizeChart {
@@ -56,36 +56,39 @@ export function VariantAccordionItem({
   return (
     <AccordionItem 
       value={variant.variantId} 
-      className="border rounded-md mb-2 overflow-hidden transition-all duration-200 hover:border-primary/30"
+      className="border rounded-lg mb-2 overflow-hidden transition-all duration-200 hover:border-primary/30 hover:shadow-sm"
     >
-      <AccordionTrigger className="px-4 py-2 hover:bg-secondary/5 [&[data-state=open]]:bg-secondary/10">
+      <AccordionTrigger className="px-4 py-3 hover:bg-secondary/5 [&[data-state=open]]:bg-secondary/10">
         <div className="flex items-center justify-between w-full px-2">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
-              Size: {variant.size}
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 font-medium">
+              Size {variant.size}
             </Badge>
-            <InventoryQuantityControl 
-              initialQuantity={variant.quantity || 1}
-              variantId={variant.variantId}
-              onQuantityChange={onQuantityChange}
-            />
+            
+            <div className="ml-2" onClick={handleStopPropagation}>
+              <InventoryQuantityControl 
+                initialQuantity={variant.quantity || 1}
+                variantId={variant.variantId}
+                onQuantityChange={onQuantityChange}
+              />
+            </div>
           </div>
           
-          <div className="flex gap-2" onClick={handleStopPropagation}>
+          <div className="flex items-center gap-2" onClick={handleStopPropagation}>
             <Button
               size="sm"
-              variant="ghost"
-              className="gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800"
+              variant="outline"
+              className="gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 border-blue-200"
               onClick={() => onViewMarketData(variant)}
             >
               <LineChart size={14} />
-              Market
+              Market Data
             </Button>
             
             <Button
               size="sm"
-              variant="ghost"
-              className="gap-1 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-800"
+              variant="outline"
+              className="gap-1 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-800 border-purple-200"
               onClick={() => onViewListings(variant)}
             >
               <Eye size={14} />
@@ -96,25 +99,22 @@ export function VariantAccordionItem({
       </AccordionTrigger>
       
       <AccordionContent className="border-t bg-background/50">
-        <div className="p-3">
+        <div className="p-4">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'conversions' | 'actions')} className="w-full">
-            <TabsList className="w-full grid grid-cols-2 mb-2">
-              <TabsTrigger value="actions">Quick Actions</TabsTrigger>
-              <TabsTrigger value="conversions">Size Conversions</TabsTrigger>
+            <TabsList className="w-full grid grid-cols-2 bg-secondary/10 mb-3">
+              <TabsTrigger value="actions" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Quick Actions</TabsTrigger>
+              <TabsTrigger value="conversions" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Size Conversions</TabsTrigger>
             </TabsList>
             
             <TabsContent value="actions" className="pt-2">
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <Button 
                   size="sm" 
                   variant="outline" 
                   className="gap-1.5 w-full bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800 border-green-200"
-                  onClick={(e) => {
-                    handleStopPropagation(e);
-                    onListItem('stockx', variant.variantId);
-                  }}
+                  onClick={() => onListItem('stockx', variant.variantId)}
                 >
-                  <Package size={14} />
+                  <Tag size={14} />
                   List on StockX
                 </Button>
                 
@@ -122,22 +122,19 @@ export function VariantAccordionItem({
                   size="sm" 
                   variant="outline" 
                   className="gap-1.5 w-full bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800 border-orange-200"
-                  onClick={(e) => {
-                    handleStopPropagation(e);
-                    onListItem('goat', variant.variantId);
-                  }}
+                  onClick={() => onListItem('goat', variant.variantId)}
                 >
-                  <Package size={14} />
+                  <Truck size={14} />
                   List on GOAT
                 </Button>
               </div>
               
-              <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
-                <div className="border rounded-md p-2 bg-secondary/5">
+              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                <div className="border rounded-md p-3 bg-secondary/5">
                   <span className="text-muted-foreground block mb-1">StockX:</span>
                   <Badge variant="outline" className="bg-background">0 active</Badge>
                 </div>
-                <div className="border rounded-md p-2 bg-secondary/5">
+                <div className="border rounded-md p-3 bg-secondary/5">
                   <span className="text-muted-foreground block mb-1">GOAT:</span>
                   <Badge variant="outline" className="bg-background">0 active</Badge>
                 </div>
@@ -148,14 +145,14 @@ export function VariantAccordionItem({
               {variant.sizeChart ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {variant.sizeChart.availableConversions.map((conversion, idx) => (
-                    <div key={idx} className="border rounded-md p-2 text-sm bg-secondary/5">
-                      <span className="text-muted-foreground">{conversion.type.toUpperCase()}: </span>
-                      <span className="font-medium">{conversion.size}</span>
+                    <div key={idx} className="border rounded-md p-3 text-sm bg-blue-50/50 hover:bg-blue-50 transition-colors">
+                      <span className="text-blue-800 font-medium">{conversion.type.toUpperCase()}: </span>
+                      <span className="font-semibold text-blue-900">{conversion.size}</span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center p-4 text-sm text-muted-foreground">
+                <div className="text-center p-4 text-sm text-muted-foreground border rounded-md bg-secondary/5">
                   No size conversion information available
                 </div>
               )}

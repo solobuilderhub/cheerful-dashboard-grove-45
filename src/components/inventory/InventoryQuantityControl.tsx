@@ -56,50 +56,56 @@ export function InventoryQuantityControl({ initialQuantity, variantId, onQuantit
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center">
+      <div className="text-xs text-muted-foreground mr-1">Qty:</div>
       {isEditing ? (
         <div className="flex items-center gap-1">
           <Input
             type="number"
             value={tempQuantity}
             onChange={(e) => setTempQuantity(e.target.value)}
-            className="w-16 h-8 text-center"
+            className="w-16 h-7 text-center text-sm"
             min="1"
             autoFocus
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSaveEdit();
+              }
+            }}
           />
           <Button 
             size="sm" 
             variant="outline" 
-            className="h-8 w-8 p-0 bg-green-50 hover:bg-green-100 border-green-200"
+            className="h-7 w-7 p-0 bg-green-50 hover:bg-green-100 border-green-200"
             onClick={handleSaveEdit}
           >
             <Check size={14} className="text-green-600" />
           </Button>
         </div>
       ) : (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 bg-secondary/5 rounded-md border p-0.5">
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 bg-secondary/10 hover:bg-secondary/20"
+            className="h-6 w-6 p-0 rounded-md hover:bg-secondary/20"
             onClick={handleDecrement}
             disabled={quantity <= 1}
           >
-            <Minus size={14} />
+            <Minus size={12} />
           </Button>
           <div 
-            className="w-8 text-center cursor-pointer border rounded-md py-1 hover:bg-secondary/10 transition-colors" 
+            className="w-6 text-center cursor-pointer hover:bg-secondary/10 transition-colors py-0.5 rounded text-sm font-medium" 
             onClick={handleManualEdit}
           >
             {quantity}
           </div>
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="h-8 w-8 p-0 bg-secondary/10 hover:bg-secondary/20"
+            className="h-6 w-6 p-0 rounded-md hover:bg-secondary/20"
             onClick={handleIncrement}
           >
-            <Plus size={14} />
+            <Plus size={12} />
           </Button>
         </div>
       )}
