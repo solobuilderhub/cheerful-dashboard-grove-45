@@ -15,55 +15,6 @@ import { Button } from "@/components/ui/button";
 import { InventoryDetailDrawer } from './inventory-drawer/InventoryDetailDrawer';
 import { InventoryItem } from './inventory-drawer/types';
 
-interface SizeChart {
-  defaultConversion: {
-    size: string;
-    type: string;
-  };
-  availableConversions: Array<{
-    size: string;
-    type: string;
-  }>;
-}
-
-interface Variant {
-  _id: string;
-  variantId: string;
-  variantName: string;
-  variantValue: string;
-  size: string;
-  sizeChart?: SizeChart;
-  quantity?: number;
-}
-
-export interface InventoryItem {
-  id: string;
-  image: string;
-  name: string;
-  styleId: string;
-  size: string;
-  quantity: number;
-  dateAdded: string;
-  warehouseLocation: string;
-  cost: string;
-  daysListed?: number;
-  spread?: number;
-  isLowestAsk?: boolean;
-  isExpired?: boolean;
-  stockx?: {
-    sku: string;
-    productId?: string;
-  };
-  goat?: {
-    sku: string;
-    size_unit?: string;
-    catalogId?: string;
-    name?: string;
-  };
-  brand?: string;
-  variations?: Variant[];
-}
-
 interface InventoryTableProps {
   searchQuery: string;
   filters?: FilterValues | null;
