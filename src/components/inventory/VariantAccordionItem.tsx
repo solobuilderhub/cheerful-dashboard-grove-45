@@ -61,7 +61,7 @@ export function VariantAccordionItem({
       <AccordionTrigger className="px-4 py-3 hover:bg-secondary/5 [&[data-state=open]]:bg-secondary/10">
         <div className="flex items-center justify-between w-full px-2">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 font-medium">
+            <Badge variant="outline" className="bg-secondary/30 text-foreground border-secondary">
               Size {variant.size}
             </Badge>
             
@@ -78,7 +78,7 @@ export function VariantAccordionItem({
             <Button
               size="sm"
               variant="outline"
-              className="gap-1 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800 border-blue-200"
+              className="gap-1 bg-secondary/40 text-foreground hover:bg-secondary hover:text-foreground border-secondary"
               onClick={() => onViewMarketData(variant)}
             >
               <LineChart size={14} />
@@ -88,7 +88,7 @@ export function VariantAccordionItem({
             <Button
               size="sm"
               variant="outline"
-              className="gap-1 bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-800 border-purple-200"
+              className="gap-1 bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary border-primary/20"
               onClick={() => onViewListings(variant)}
             >
               <Eye size={14} />
@@ -111,7 +111,7 @@ export function VariantAccordionItem({
                 <Button 
                   size="sm" 
                   variant="outline" 
-                  className="gap-1.5 w-full bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800 border-green-200"
+                  className="gap-1.5 w-full bg-secondary/20 text-foreground hover:bg-secondary hover:text-foreground border-secondary/30"
                   onClick={() => onListItem('stockx', variant.variantId)}
                 >
                   <Tag size={14} />
@@ -121,7 +121,7 @@ export function VariantAccordionItem({
                 <Button 
                   size="sm" 
                   variant="outline" 
-                  className="gap-1.5 w-full bg-orange-50 text-orange-700 hover:bg-orange-100 hover:text-orange-800 border-orange-200"
+                  className="gap-1.5 w-full bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary border-primary/20"
                   onClick={() => onListItem('goat', variant.variantId)}
                 >
                   <Truck size={14} />
@@ -130,13 +130,13 @@ export function VariantAccordionItem({
               </div>
               
               <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <div className="border rounded-md p-3 bg-secondary/5">
+                <div className="border rounded-md p-3 bg-secondary/10">
                   <span className="text-muted-foreground block mb-1">StockX:</span>
-                  <Badge variant="outline" className="bg-background">0 active</Badge>
+                  <Badge variant="outline" className="bg-secondary/20">0 active</Badge>
                 </div>
-                <div className="border rounded-md p-3 bg-secondary/5">
+                <div className="border rounded-md p-3 bg-secondary/10">
                   <span className="text-muted-foreground block mb-1">GOAT:</span>
-                  <Badge variant="outline" className="bg-background">0 active</Badge>
+                  <Badge variant="outline" className="bg-secondary/20">0 active</Badge>
                 </div>
               </div>
             </TabsContent>
@@ -145,9 +145,9 @@ export function VariantAccordionItem({
               {variant.sizeChart ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {variant.sizeChart.availableConversions.map((conversion, idx) => (
-                    <div key={idx} className="border rounded-md p-3 text-sm bg-blue-50/50 hover:bg-blue-50 transition-colors">
-                      <span className="text-blue-800 font-medium">{conversion.type.toUpperCase()}: </span>
-                      <span className="font-semibold text-blue-900">{conversion.size}</span>
+                    <div key={idx} className="border rounded-md p-3 text-sm bg-secondary/10 hover:bg-secondary/20 transition-colors">
+                      <span className="text-primary font-medium">{conversion.type.toUpperCase()}: </span>
+                      <span className="font-semibold text-foreground">{conversion.size}</span>
                     </div>
                   ))}
                 </div>
