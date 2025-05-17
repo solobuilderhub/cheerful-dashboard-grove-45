@@ -14,10 +14,10 @@ export function InventoryTableHeader() {
         <TableHead>Name</TableHead>
         <TableHead>Size</TableHead>
         <TableHead>Qty</TableHead>
-        <TableHead>Inventory added date</TableHead>
-        <TableHead>Warehouse location</TableHead>
+        <TableHead>Added Date</TableHead>
+        <TableHead>Warehouse</TableHead>
         <TableHead>Cost</TableHead>
-        <TableHead className="w-[80px]"></TableHead>
+        <TableHead className="w-[80px]">Actions</TableHead>
       </TableRow>
     </TableHeader>
   );

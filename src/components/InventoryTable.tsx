@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Table, TableBody } from "@/components/ui/table";
 import { FilterValues } from './FilterModal';
-import { InventoryDetailDrawer } from './inventory-drawer/InventoryDetailDrawer';
+import { InventoryDetailSheet } from './inventory-drawer/InventoryDetailSheet';
 import { InventoryItem } from './inventory-drawer/types';
 import { InventoryTableHeader } from './inventory/InventoryTableHeader';
 import { InventoryTableRow } from './inventory/InventoryTableRow';
@@ -18,14 +18,14 @@ interface InventoryTableProps {
 
 export function InventoryTable({ searchQuery, filters, onViewItem }: InventoryTableProps) {
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   
   // Apply filters using our utility function
   const filteredItems = filterInventoryItems(sampleInventoryItems, searchQuery, filters);
 
   const handleViewItem = (item: InventoryItem) => {
     setSelectedItem(item);
-    setIsDrawerOpen(true);
+    setIsSheetOpen(true);
   };
 
   return (
@@ -53,9 +53,9 @@ export function InventoryTable({ searchQuery, filters, onViewItem }: InventoryTa
         </Table>
       </div>
       
-      <InventoryDetailDrawer 
-        open={isDrawerOpen} 
-        onOpenChange={setIsDrawerOpen} 
+      <InventoryDetailSheet 
+        open={isSheetOpen} 
+        onOpenChange={setIsSheetOpen} 
         item={selectedItem}
       />
     </>

@@ -6,20 +6,21 @@ import { Filter, Search, Upload, Plus, Package } from 'lucide-react';
 import { InventoryTable } from './InventoryTable';
 import { MasterInventoryUpload } from './MasterInventoryUpload';
 import { FilterModal, FilterValues } from './FilterModal';
-import { InventoryDetailSheet } from './InventoryDetailSheet';
+import { InventoryDetailSheet } from './inventory-drawer/InventoryDetailSheet';
+import { InventoryItem } from './inventory-drawer/types';
 
 export function InventoryContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const handleApplyFilters = (filters: FilterValues) => {
     setAppliedFilters(filters);
   };
 
-  const handleViewItem = (item) => {
+  const handleViewItem = (item: InventoryItem) => {
     setSelectedItem(item);
     setIsDetailOpen(true);
   };
