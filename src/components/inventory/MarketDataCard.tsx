@@ -2,7 +2,8 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2 } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface StockXMarketData {
   productId: string;
@@ -32,9 +33,16 @@ interface MarketDataCardProps {
   goatData: GoatMarketData[];
   selectedSize: string;
   isLoading: boolean;
+  onClose?: () => void;
 }
 
-export function MarketDataCard({ stockXData, goatData, selectedSize, isLoading }: MarketDataCardProps) {
+export function MarketDataCard({ 
+  stockXData, 
+  goatData, 
+  selectedSize, 
+  isLoading,
+  onClose 
+}: MarketDataCardProps) {
   // Format price function
   const formatPrice = (cents: string) => {
     if (!cents || cents === "0") return '$0.00';
@@ -52,10 +60,22 @@ export function MarketDataCard({ stockXData, goatData, selectedSize, isLoading }
   };
 
   return (
-    <Card className="p-4">
+    <Card className="p-4 relative animate-fade-in">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold">Market Data - Size {selectedSize}</h3>
-        {isLoading && <Loader2 className="animate-spin h-4 w-4" />}
+        <div className="flex items-center gap-2">
+          {isLoading && <Loader2 className="animate-spin h-4 w-4" />}
+          {onClose && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0 rounded-full"
+              onClick={onClose}
+            >
+              <X size={16} />
+            </Button>
+          )}
+        </div>
       </div>
       
       <Tabs defaultValue="stockx">

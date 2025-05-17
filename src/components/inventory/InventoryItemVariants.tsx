@@ -4,6 +4,7 @@ import { Accordion } from '@/components/ui/accordion';
 import { MarketDataCard } from './MarketDataCard';
 import { VariantAccordionItem } from './VariantAccordionItem';
 import { VariantListingsDialog } from './VariantListingsDialog';
+import { useToast } from '@/hooks/use-toast';
 
 interface SizeChart {
   defaultConversion: {
@@ -72,11 +73,14 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
   const [loadingMarketData, setLoadingMarketData] = useState<boolean>(false);
   const [showListingsDialog, setShowListingsDialog] = useState<boolean>(false);
+  const [showMarketData, setShowMarketData] = useState<boolean>(false);
+  const { toast } = useToast();
 
   // Function to fetch market data for a variant
   const handleViewMarketData = (variant: Variant) => {
     setSelectedVariant(variant);
     setLoadingMarketData(true);
+    setShowMarketData(true);
     
     // Simulate API call
     setTimeout(() => {
@@ -90,6 +94,24 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
     setShowListingsDialog(true);
   };
 
+  // Function to handle quantity updates
+  const handleQuantityChange = (variantId: string, newQuantity: number) => {
+    // In a real app, this would update the backend
+    console.log(`Updated quantity for variant ${variantId} to ${newQuantity}`);
+    
+    // Update the local state if needed
+    if (variations) {
+      // This would be better implemented with proper state management
+      // For now, just show a toast notification
+      toast({
+        title: "Quantity updated",
+        description: `Inventory quantity for Size ${
+          variations.find(v => v.variantId === variantId)?.size || ''
+        } has been updated to ${newQuantity}`,
+      });
+    }
+  };
+
   return (
     <>
       <div className="mb-4">
@@ -101,7 +123,7 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
       
       {variations && variations.length > 0 ? (
         <div className="space-y-2">
-          <Accordion type="single" collapsible>
+          <Accordion type="single" collapsible className="space-y-2 border-0">
             {variations.map((variant) => (
               <VariantAccordionItem
                 key={variant.variantId}
@@ -109,6 +131,7 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
                 onListItem={handleListItem}
                 onViewMarketData={handleViewMarketData}
                 onViewListings={handleViewListings}
+                onQuantityChange={handleQuantityChange}
               />
             ))}
           </Accordion>
@@ -119,14 +142,17 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
         </div>
       )}
       
-      {/* Market Data Section */}
-      {selectedVariant && (
-        <MarketDataCard
-          stockXData={mockStockXMarketData}
-          goatData={mockGoatMarketData}
-          selectedSize={selectedVariant.size}
-          isLoading={loadingMarketData}
-        />
+      {/* Market Data Section - Show in dialog or drawer for better UX */}
+      {selectedVariant && showMarketData && (
+        <div className="mt-4">
+          <MarketDataCard
+            stockXData={mockStockXMarketData}
+            goatData={mockGoatMarketData}
+            selectedSize={selectedVariant.size}
+            isLoading={loadingMarketData}
+            onClose={() => setShowMarketData(false)}
+          />
+        </div>
       )}
 
       {/* Variant Listings Dialog */}
