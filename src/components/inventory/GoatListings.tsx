@@ -38,15 +38,15 @@ export interface GoatListing {
 interface GoatListingsProps {
   listings: GoatListing[];
   lastUpdated: string;
-  variantId?: string; // Optional parameter to filter listings by variant
+  filterBySize?: string; // Added this prop to match what's being passed in VariantListingsDialog
 }
 
-export function GoatListings({ listings, lastUpdated, variantId }: GoatListingsProps) {
+export function GoatListings({ listings, lastUpdated, filterBySize }: GoatListingsProps) {
   const [selectedListing, setSelectedListing] = useState<GoatListing | null>(null);
   
-  // Filter listings by variant if provided
-  const filteredListings = variantId 
-    ? listings.filter(listing => listing.id.includes(variantId)) 
+  // Filter listings by size if provided
+  const filteredListings = filterBySize 
+    ? listings.filter(listing => listing.size.toString() === filterBySize) 
     : listings;
   
   // Get a status badge component based on status string

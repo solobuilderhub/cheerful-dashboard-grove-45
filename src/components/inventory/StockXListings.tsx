@@ -53,15 +53,15 @@ export interface StockXListing {
 interface StockXListingsProps {
   listings: StockXListing[];
   lastUpdated: string;
-  variantId?: string; // Optional parameter to filter listings by variant
+  filterByVariantId?: string; // Added this prop to match what's being passed in VariantListingsDialog
 }
 
-export function StockXListings({ listings, lastUpdated, variantId }: StockXListingsProps) {
+export function StockXListings({ listings, lastUpdated, filterByVariantId }: StockXListingsProps) {
   const [selectedListing, setSelectedListing] = useState<StockXListing | null>(null);
   
   // Filter listings by variant if provided
-  const filteredListings = variantId 
-    ? listings.filter(listing => listing.variant.variantId === variantId) 
+  const filteredListings = filterByVariantId 
+    ? listings.filter(listing => listing.variant.variantId === filterByVariantId) 
     : listings;
   
   // Get a status badge component based on status string
