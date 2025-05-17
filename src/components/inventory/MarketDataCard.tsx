@@ -60,16 +60,16 @@ export function MarketDataCard({
   };
 
   return (
-    <Card className="p-4 relative animate-fade-in">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold">Market Data - Size {selectedSize}</h3>
+    <Card className="p-4 relative animate-fade-in border-2 border-blue-100 shadow-md">
+      <div className="flex items-center justify-between mb-4 bg-blue-50 -m-4 mb-2 px-4 py-2 border-b border-blue-100">
+        <h3 className="font-semibold text-blue-800">Market Data - Size {selectedSize}</h3>
         <div className="flex items-center gap-2">
-          {isLoading && <Loader2 className="animate-spin h-4 w-4" />}
+          {isLoading && <Loader2 className="animate-spin h-4 w-4 text-blue-600" />}
           {onClose && (
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-8 w-8 p-0 rounded-full"
+              className="h-8 w-8 p-0 rounded-full hover:bg-blue-200 text-blue-700"
               onClick={onClose}
             >
               <X size={16} />
@@ -78,10 +78,10 @@ export function MarketDataCard({
         </div>
       </div>
       
-      <Tabs defaultValue="stockx">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="stockx">StockX</TabsTrigger>
-          <TabsTrigger value="goat">GOAT</TabsTrigger>
+      <Tabs defaultValue="stockx" className="mt-4">
+        <TabsList className="grid w-full grid-cols-2 bg-blue-50">
+          <TabsTrigger value="stockx" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800">StockX</TabsTrigger>
+          <TabsTrigger value="goat" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800">GOAT</TabsTrigger>
         </TabsList>
         
         <TabsContent value="stockx" className="space-y-4 mt-4">
@@ -91,13 +91,13 @@ export function MarketDataCard({
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4">
-              <div className="border rounded-md p-3">
-                <div className="text-sm text-muted-foreground">Lowest Ask</div>
-                <div className="text-xl font-semibold">${stockXData.lowestAskAmount}</div>
+              <div className="border rounded-md p-3 bg-green-50 border-green-100">
+                <div className="text-sm text-green-700">Lowest Ask</div>
+                <div className="text-xl font-semibold text-green-800">${stockXData.lowestAskAmount}</div>
               </div>
-              <div className="border rounded-md p-3">
-                <div className="text-sm text-muted-foreground">Highest Bid</div>
-                <div className="text-xl font-semibold">${stockXData.highestBidAmount}</div>
+              <div className="border rounded-md p-3 bg-blue-50 border-blue-100">
+                <div className="text-sm text-blue-700">Highest Bid</div>
+                <div className="text-xl font-semibold text-blue-800">${stockXData.highestBidAmount}</div>
               </div>
             </div>
           )}
@@ -120,27 +120,27 @@ export function MarketDataCard({
                 
                 return (
                   <>
-                    <div className="border rounded-md p-3">
-                      <div className="text-sm text-muted-foreground">Lowest Ask</div>
-                      <div className="text-xl font-semibold">
+                    <div className="border rounded-md p-3 bg-green-50 border-green-100">
+                      <div className="text-sm text-green-700">Lowest Ask</div>
+                      <div className="text-xl font-semibold text-green-800">
                         {formatPrice(data.availability.lowest_listing_price_cents)}
                       </div>
                     </div>
-                    <div className="border rounded-md p-3">
-                      <div className="text-sm text-muted-foreground">Highest Offer</div>
-                      <div className="text-xl font-semibold">
+                    <div className="border rounded-md p-3 bg-blue-50 border-blue-100">
+                      <div className="text-sm text-blue-700">Highest Offer</div>
+                      <div className="text-xl font-semibold text-blue-800">
                         {formatPrice(data.availability.highest_offer_price_cents)}
                       </div>
                     </div>
-                    <div className="border rounded-md p-3">
-                      <div className="text-sm text-muted-foreground">Last Sold</div>
-                      <div className="text-xl font-semibold">
+                    <div className="border rounded-md p-3 bg-purple-50 border-purple-100">
+                      <div className="text-sm text-purple-700">Last Sold</div>
+                      <div className="text-xl font-semibold text-purple-800">
                         {formatPrice(data.availability.last_sold_listing_price_cents)}
                       </div>
                     </div>
-                    <div className="border rounded-md p-3">
-                      <div className="text-sm text-muted-foreground">Market Value</div>
-                      <div className="text-xl font-semibold">
+                    <div className="border rounded-md p-3 bg-orange-50 border-orange-100">
+                      <div className="text-sm text-orange-700">Market Value</div>
+                      <div className="text-xl font-semibold text-orange-800">
                         {formatPrice(data.availability.global_indicator_price_cents)}
                       </div>
                     </div>

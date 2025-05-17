@@ -19,9 +19,19 @@ export function InventoryDetailTabs({
 }: InventoryDetailTabsProps) {
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-      <TabsList className="grid grid-cols-2 mb-6">
-        <TabsTrigger value="details">Details</TabsTrigger>
-        <TabsTrigger value="variants">Variants</TabsTrigger>
+      <TabsList className="grid grid-cols-2 mb-6 bg-secondary/10">
+        <TabsTrigger 
+          value="details" 
+          className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+        >
+          Details
+        </TabsTrigger>
+        <TabsTrigger 
+          value="variants"
+          className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
+        >
+          Variants & Market Data
+        </TabsTrigger>
       </TabsList>
       
       <TabsContent value="details" className="space-y-4">

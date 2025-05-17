@@ -70,10 +70,10 @@ export function InventoryQuantityControl({ initialQuantity, variantId, onQuantit
           <Button 
             size="sm" 
             variant="outline" 
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 bg-green-50 hover:bg-green-100 border-green-200"
             onClick={handleSaveEdit}
           >
-            <Check size={14} />
+            <Check size={14} className="text-green-600" />
           </Button>
         </div>
       ) : (
@@ -81,14 +81,14 @@ export function InventoryQuantityControl({ initialQuantity, variantId, onQuantit
           <Button
             variant="outline"
             size="sm"
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 bg-secondary/10 hover:bg-secondary/20"
             onClick={handleDecrement}
             disabled={quantity <= 1}
           >
             <Minus size={14} />
           </Button>
           <div 
-            className="w-8 text-center cursor-pointer" 
+            className="w-8 text-center cursor-pointer border rounded-md py-1 hover:bg-secondary/10 transition-colors" 
             onClick={handleManualEdit}
           >
             {quantity}
@@ -96,7 +96,7 @@ export function InventoryQuantityControl({ initialQuantity, variantId, onQuantit
           <Button
             variant="outline"
             size="sm"
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 p-0 bg-secondary/10 hover:bg-secondary/20"
             onClick={handleIncrement}
           >
             <Plus size={14} />

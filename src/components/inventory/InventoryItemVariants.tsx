@@ -113,47 +113,51 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
   };
 
   return (
-    <>
-      <div className="mb-4">
-        <h3 className="font-semibold mb-2">Available Variants</h3>
-        <p className="text-sm text-muted-foreground">
-          {(variations?.length || 0)} size variants available
-        </p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="md:col-span-2">
+        <div className="mb-4">
+          <h3 className="font-semibold mb-2">Available Variants</h3>
+          <p className="text-sm text-muted-foreground">
+            {(variations?.length || 0)} size variants available
+          </p>
+        </div>
+        
+        {variations && variations.length > 0 ? (
+          <div className="space-y-2">
+            <Accordion type="single" collapsible className="space-y-2 border-0">
+              {variations.map((variant) => (
+                <VariantAccordionItem
+                  key={variant.variantId}
+                  variant={variant}
+                  onListItem={handleListItem}
+                  onViewMarketData={handleViewMarketData}
+                  onViewListings={handleViewListings}
+                  onQuantityChange={handleQuantityChange}
+                />
+              ))}
+            </Accordion>
+          </div>
+        ) : (
+          <div className="text-center py-6 border rounded-md">
+            <p className="text-muted-foreground">No variant information available</p>
+          </div>
+        )}
       </div>
       
-      {variations && variations.length > 0 ? (
-        <div className="space-y-2">
-          <Accordion type="single" collapsible className="space-y-2 border-0">
-            {variations.map((variant) => (
-              <VariantAccordionItem
-                key={variant.variantId}
-                variant={variant}
-                onListItem={handleListItem}
-                onViewMarketData={handleViewMarketData}
-                onViewListings={handleViewListings}
-                onQuantityChange={handleQuantityChange}
-              />
-            ))}
-          </Accordion>
-        </div>
-      ) : (
-        <div className="text-center py-6 border rounded-md">
-          <p className="text-muted-foreground">No variant information available</p>
-        </div>
-      )}
-      
-      {/* Market Data Section - Show in dialog or drawer for better UX */}
-      {selectedVariant && showMarketData && (
-        <div className="mt-4">
-          <MarketDataCard
-            stockXData={mockStockXMarketData}
-            goatData={mockGoatMarketData}
-            selectedSize={selectedVariant.size}
-            isLoading={loadingMarketData}
-            onClose={() => setShowMarketData(false)}
-          />
-        </div>
-      )}
+      {/* Market Data Section - Now shows on the right side */}
+      <div className="md:col-span-1 relative">
+        {selectedVariant && showMarketData && (
+          <div className="sticky top-4">
+            <MarketDataCard
+              stockXData={mockStockXMarketData}
+              goatData={mockGoatMarketData}
+              selectedSize={selectedVariant.size}
+              isLoading={loadingMarketData}
+              onClose={() => setShowMarketData(false)}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Variant Listings Dialog */}
       <VariantListingsDialog
@@ -162,6 +166,6 @@ export function InventoryItemVariants({ variations, handleListItem, styleId }: I
         variant={selectedVariant}
         styleId={styleId}
       />
-    </>
+    </div>
   );
 }
