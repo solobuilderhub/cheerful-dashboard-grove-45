@@ -53,10 +53,16 @@ export interface StockXListing {
 interface StockXListingsProps {
   listings: StockXListing[];
   lastUpdated: string;
+  variantId?: string; // Optional parameter to filter listings by variant
 }
 
-export function StockXListings({ listings, lastUpdated }: StockXListingsProps) {
+export function StockXListings({ listings, lastUpdated, variantId }: StockXListingsProps) {
   const [selectedListing, setSelectedListing] = useState<StockXListing | null>(null);
+  
+  // Filter listings by variant if provided
+  const filteredListings = variantId 
+    ? listings.filter(listing => listing.variant.variantId === variantId) 
+    : listings;
   
   // Get a status badge component based on status string
   const getStatusBadge = (status: string) => {
@@ -86,7 +92,7 @@ export function StockXListings({ listings, lastUpdated }: StockXListingsProps) {
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">StockX Listings</CardTitle>
         <CardDescription>
-          Showing {listings.length} active listings on StockX
+          Showing {filteredListings.length} active listings on StockX
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
@@ -102,7 +108,7 @@ export function StockXListings({ listings, lastUpdated }: StockXListingsProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {listings.map((listing) => (
+            {filteredListings.map((listing) => (
               <TableRow key={listing.listingId}>
                 <TableCell className="font-medium">US {listing.variant.variantValue}</TableCell>
                 <TableCell className="font-medium">{formatPrice(listing.amount)}</TableCell>

@@ -38,10 +38,16 @@ export interface GoatListing {
 interface GoatListingsProps {
   listings: GoatListing[];
   lastUpdated: string;
+  variantId?: string; // Optional parameter to filter listings by variant
 }
 
-export function GoatListings({ listings, lastUpdated }: GoatListingsProps) {
+export function GoatListings({ listings, lastUpdated, variantId }: GoatListingsProps) {
   const [selectedListing, setSelectedListing] = useState<GoatListing | null>(null);
+  
+  // Filter listings by variant if provided
+  const filteredListings = variantId 
+    ? listings.filter(listing => listing.id.includes(variantId)) 
+    : listings;
   
   // Get a status badge component based on status string
   const getStatusBadge = (status: string) => {
@@ -61,7 +67,7 @@ export function GoatListings({ listings, lastUpdated }: GoatListingsProps) {
       <CardHeader className="pb-2">
         <CardTitle className="text-lg">GOAT Listings</CardTitle>
         <CardDescription>
-          Showing {listings.length} active listings on GOAT
+          Showing {filteredListings.length} active listings on GOAT
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
@@ -77,7 +83,7 @@ export function GoatListings({ listings, lastUpdated }: GoatListingsProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {listings.map((listing) => (
+            {filteredListings.map((listing) => (
               <TableRow key={listing.id}>
                 <TableCell className="font-medium">US {listing.size}</TableCell>
                 <TableCell className="font-medium">{formatPrice(listing.price_cents)}</TableCell>
