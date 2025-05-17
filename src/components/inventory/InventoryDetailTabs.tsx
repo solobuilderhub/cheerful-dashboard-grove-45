@@ -4,9 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InventoryItemDetails } from './InventoryItemDetails';
 import { InventoryItemVariants } from './InventoryItemVariants';
 import { InventoryItemListings } from './InventoryItemListings';
+import { InventoryItem } from '../inventory-drawer/types';
 
 interface InventoryDetailTabsProps {
-  item: any;
+  item: InventoryItem;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   handleListItem: (platform: 'stockx' | 'goat', variantId?: string) => void;

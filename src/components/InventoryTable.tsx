@@ -12,7 +12,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Trash2, Eye } from 'lucide-react';
 import { FilterValues } from './FilterModal';
 import { Button } from "@/components/ui/button";
-import { InventoryDetailDrawer } from './InventoryDetailDrawer';
+import { InventoryDetailDrawer } from './inventory-drawer/InventoryDetailDrawer';
+import { InventoryItem } from './inventory-drawer/types';
 
 interface SizeChart {
   defaultConversion: {
