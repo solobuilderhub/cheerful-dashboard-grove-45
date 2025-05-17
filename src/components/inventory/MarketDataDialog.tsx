@@ -35,15 +35,10 @@ export function MarketDataDialog({
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
           <MarketDataCard 
-            platform="StockX"
-            data={stockXData} 
-            isLoading={isLoadingStockX}
-          />
-          
-          <MarketDataCard 
-            platform="GOAT"
-            data={goatData} 
-            isLoading={isLoadingGoat}
+            stockXData={stockXData} 
+            goatData={goatData}
+            selectedSize={variant.size}
+            isLoading={isLoadingStockX || isLoadingGoat}
           />
         </div>
       </DialogContent>

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, X } from 'lucide-react';
@@ -29,8 +29,8 @@ interface GoatMarketData {
 }
 
 interface MarketDataCardProps {
-  stockXData: StockXMarketData;
-  goatData: GoatMarketData[];
+  stockXData: StockXMarketData | null;
+  goatData: GoatMarketData[] | null;
   selectedSize: string;
   isLoading: boolean;
   onClose?: () => void;
@@ -43,6 +43,8 @@ export function MarketDataCard({
   isLoading,
   onClose 
 }: MarketDataCardProps) {
+  const [activeTab, setActiveTab] = useState('stockx');
+  
   // Format price function
   const formatPrice = (cents: string) => {
     if (!cents || cents === "0") return '$0.00';
@@ -55,12 +57,13 @@ export function MarketDataCard({
 
   // Get GOAT market data for a specific size
   const getGoatMarketDataForSize = (size: string) => {
+    if (!goatData) return null;
     const numericSize = parseFloat(size);
     return goatData.find(item => item.size === numericSize);
   };
 
   return (
-    <Card className="p-4 relative animate-fade-in border-2 border-blue-100 shadow-md">
+    <Card className="p-4 relative animate-fade-in border-2 border-blue-100 shadow-md w-full">
       <div className="flex items-center justify-between mb-4 bg-blue-50 -m-4 mb-2 px-4 py-2 border-b border-blue-100">
         <h3 className="font-semibold text-blue-800">Market Data - Size {selectedSize}</h3>
         <div className="flex items-center gap-2">
@@ -78,14 +81,14 @@ export function MarketDataCard({
         </div>
       </div>
       
-      <Tabs defaultValue="stockx" className="mt-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
         <TabsList className="grid w-full grid-cols-2 bg-blue-50">
           <TabsTrigger value="stockx" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800">StockX</TabsTrigger>
           <TabsTrigger value="goat" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800">GOAT</TabsTrigger>
         </TabsList>
         
         <TabsContent value="stockx" className="space-y-4 mt-4">
-          {isLoading ? (
+          {isLoading || !stockXData ? (
             <div className="h-32 flex items-center justify-center">
               <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
             </div>
@@ -104,7 +107,7 @@ export function MarketDataCard({
         </TabsContent>
         
         <TabsContent value="goat" className="space-y-4 mt-4">
-          {isLoading ? (
+          {isLoading || !goatData ? (
             <div className="h-32 flex items-center justify-center">
               <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
             </div>

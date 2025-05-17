@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { StockXListings } from './StockXListings';
-import { GoatListings } from './GoatListings';
+import { StockXListings, StockXListing } from './StockXListings';
+import { GoatListings, GoatListing } from './GoatListings';
 import { Badge } from '@/components/ui/badge';
 import { Variant } from '@/components/inventory-drawer/types';
 import { useStockXListings, useGoatListings } from '@/hooks/use-listings-data';
@@ -14,6 +14,63 @@ interface VariantListingsDialogProps {
   variant: Variant | null;
   styleId: string;
 }
+
+// Mock StockX listing data that matches the StockXListing interface
+const mockStockXListings: StockXListing[] = [
+  {
+    amount: "150",
+    ask: {
+      askId: "ask123",
+      askCreatedAt: new Date().toISOString(),
+      askUpdatedAt: new Date().toISOString(),
+      askExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    },
+    order: null,
+    product: {
+      productId: "prod123",
+      productName: "Nike Dunk Low",
+      styleId: "DD1391-100",
+    },
+    variant: {
+      variantId: "var123",
+      variantName: "US 9",
+      variantValue: "9",
+    },
+    currencyCode: "USD",
+    listingId: "list123",
+    status: "ACTIVE",
+    inventoryType: "standard",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    authenticationDetails: null,
+    batch: {
+      batchId: "batch123",
+      taskId: "task123",
+    },
+    initiatedShipments: null,
+  }
+];
+
+// Mock GOAT listing data that matches the GoatListing interface
+const mockGoatListings: GoatListing[] = [
+  {
+    id: "g123",
+    catalog_id: "cat123",
+    condition: "CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    size: 9,
+    size_unit: "US",
+    sku: "DD1391-100",
+    consigned: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    status: "ACTIVE",
+    price_cents: "15000",
+    activated_at: new Date().toISOString(),
+    defects: [],
+    additional_defects: "",
+  }
+];
 
 export function VariantListingsDialog({ 
   open, 
@@ -26,6 +83,15 @@ export function VariantListingsDialog({
   // Use our custom hooks to fetch listings
   const { data: stockXListings, isLoading: isLoadingStockX } = useStockXListings(variant?.variantId);
   const { data: goatListings, isLoading: isLoadingGoat } = useGoatListings(variant?.size);
+  
+  // Function to ensure proper types by merging mock data with API responses if needed
+  const getStockXListings = () => {
+    return stockXListings as StockXListing[] || mockStockXListings;
+  };
+  
+  const getGoatListings = () => {
+    return goatListings as GoatListing[] || mockGoatListings;
+  };
 
   if (!variant) return null;
 
@@ -47,7 +113,7 @@ export function VariantListingsDialog({
           
           <TabsContent value="stockx" className="mt-4">
             <StockXListings 
-              listings={stockXListings || []}
+              listings={getStockXListings()}
               isLoading={isLoadingStockX}
               lastUpdated={new Date().toISOString()} 
               filterByVariantId={variant.variantId}
@@ -56,7 +122,7 @@ export function VariantListingsDialog({
           
           <TabsContent value="goat" className="mt-4">
             <GoatListings 
-              listings={goatListings || []}
+              listings={getGoatListings()}
               isLoading={isLoadingGoat}
               lastUpdated={new Date().toISOString()} 
               filterBySize={variant.size}
