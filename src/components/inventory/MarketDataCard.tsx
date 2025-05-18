@@ -112,7 +112,7 @@ export function MarketDataCard({
               <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {(() => {
                 const data = getGoatMarketDataForSize(selectedSize);
                 if (!data) return (
@@ -124,27 +124,21 @@ export function MarketDataCard({
                 return (
                   <>
                     <div className="border rounded-md p-3 bg-green-50 border-green-100">
-                      <div className="text-sm text-green-700">Lowest Ask</div>
+                      <div className="text-sm text-green-700">Lowest Listing Price</div>
                       <div className="text-xl font-semibold text-green-800">
                         {formatPrice(data.availability.lowest_listing_price_cents)}
                       </div>
                     </div>
                     <div className="border rounded-md p-3 bg-blue-50 border-blue-100">
-                      <div className="text-sm text-blue-700">Highest Offer</div>
+                      <div className="text-sm text-blue-700">Highest Offer Price</div>
                       <div className="text-xl font-semibold text-blue-800">
                         {formatPrice(data.availability.highest_offer_price_cents)}
                       </div>
                     </div>
                     <div className="border rounded-md p-3 bg-purple-50 border-purple-100">
-                      <div className="text-sm text-purple-700">Last Sold</div>
+                      <div className="text-sm text-purple-700">Last Sold Price</div>
                       <div className="text-xl font-semibold text-purple-800">
                         {formatPrice(data.availability.last_sold_listing_price_cents)}
-                      </div>
-                    </div>
-                    <div className="border rounded-md p-3 bg-orange-50 border-orange-100">
-                      <div className="text-sm text-orange-700">Market Value</div>
-                      <div className="text-xl font-semibold text-orange-800">
-                        {formatPrice(data.availability.global_indicator_price_cents)}
                       </div>
                     </div>
                   </>

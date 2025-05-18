@@ -42,21 +42,24 @@ const mockStockXListings: StockXListing[] = [
 
 const mockGoatListings: GoatListing[] = [
   {
-    id: "g123",
-    catalog_id: "cat123",
-    condition: "CONDITION_NEW",
-    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
-    size: 9,
-    size_unit: "US",
-    sku: "DD1391-100",
-    consigned: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    amount: "150",
+    order: null,
+    product: {
+      productId: "prod123",
+      productName: "Nike Dunk Low",
+      styleId: "DD1391-100",
+    },
+    variant: {
+      variantId: "var123",
+      variantName: "US 9",
+      variantValue: "9",
+    },
+    currencyCode: "USD",
+    listingId: "list123",
     status: "ACTIVE",
-    price_cents: "15000",
-    activated_at: new Date().toISOString(),
-    defects: [],
-    additional_defects: "",
+    inventoryType: "standard",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 ];
 
