@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   AccordionContent, 
@@ -7,7 +8,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, LineChart, Eye, Tag, Truck } from 'lucide-react';
+import { Package, LineChart, Eye, Tag, Truck, Calendar, Warehouse, DollarSign } from 'lucide-react';
 import { InventoryQuantityControl } from './InventoryQuantityControl';
 import { Variant } from '@/components/inventory-drawer/types';
 
@@ -28,10 +29,17 @@ export function VariantAccordionItem({
   onQuantityChange,
   itemId = '1'
 }: VariantAccordionItemProps) {
-  const [activeTab, setActiveTab] = useState<'conversions' | 'actions'>('actions');
+  const [activeTab, setActiveTab] = useState<'details' | 'conversions' | 'actions'>('details');
   
   const handleStopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
+  };
+
+  // Format date helper function
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
   };
 
   return (
@@ -82,11 +90,79 @@ export function VariantAccordionItem({
       
       <AccordionContent className="border-t bg-background/50">
         <div className="p-4">
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'conversions' | 'actions')} className="w-full">
-            <TabsList className="w-full grid grid-cols-2 bg-secondary/10 mb-3">
-              <TabsTrigger value="actions" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Quick Actions</TabsTrigger>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'details' | 'conversions' | 'actions')} className="w-full">
+            <TabsList className="w-full grid grid-cols-3 bg-secondary/10 mb-3">
+              <TabsTrigger value="details" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Details</TabsTrigger>
               <TabsTrigger value="conversions" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Size Conversions</TabsTrigger>
+              <TabsTrigger value="actions" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">Quick Actions</TabsTrigger>
             </TabsList>
+            
+            <TabsContent value="details" className="pt-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="border rounded-md p-3 bg-secondary/10">
+                      <span className="text-muted-foreground text-xs block mb-1">Date Added</span>
+                      <span className="text-sm font-medium">{formatDate(variant.dateAdded)}</span>
+                    </div>
+                    <div className="border rounded-md p-3 bg-secondary/10">
+                      <span className="text-muted-foreground text-xs block mb-1">Retail Price</span>
+                      <span className="text-sm font-medium">${variant.retailPrice || 'N/A'}</span>
+                    </div>
+                    <div className="border rounded-md p-3 bg-secondary/10">
+                      <span className="text-muted-foreground text-xs block mb-1">Wholesale Price</span>
+                      <span className="text-sm font-medium">${variant.wholesalePrice || 'N/A'}</span>
+                    </div>
+                    <div className="border rounded-md p-3 bg-secondary/10">
+                      <span className="text-muted-foreground text-xs block mb-1">Quantity</span>
+                      <span className="text-sm font-medium">{variant.quantity || 0}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 gap-2">
+                    <div className="border rounded-md p-3 bg-secondary/10">
+                      <span className="text-muted-foreground text-xs block mb-1">Warehouse Locations</span>
+                      <div className="grid grid-cols-3 gap-1 mt-1">
+                        <Badge variant="outline" className="justify-center">{variant.warehouseLocation1 || 'N/A'}</Badge>
+                        <Badge variant="outline" className="justify-center">{variant.warehouseLocation2 || 'N/A'}</Badge> 
+                        <Badge variant="outline" className="justify-center">{variant.warehouseLocation3 || 'N/A'}</Badge>
+                      </div>
+                    </div>
+                    <div className="border rounded-md p-3 bg-secondary/10">
+                      <span className="text-muted-foreground text-xs block mb-1">Total Sold</span>
+                      <div className="grid grid-cols-2 gap-2 mt-1">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">StockX</span>
+                          <span className="text-sm font-medium">{variant.totalSoldStockX || 0}</span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">GOAT</span>
+                          <span className="text-sm font-medium">{variant.totalSoldGoat || 0}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="conversions">
+              {variant.sizeChart ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {variant.sizeChart.availableConversions.map((conversion, idx) => (
+                    <div key={idx} className="border rounded-md p-3 text-sm bg-secondary/10 hover:bg-secondary/20 transition-colors">
+                      <span className="text-primary font-medium">{conversion.type.toUpperCase()}: </span>
+                      <span className="font-semibold text-foreground">{conversion.size}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center p-4 text-sm text-muted-foreground border rounded-md bg-secondary/5">
+                  No size conversion information available
+                </div>
+              )}
+            </TabsContent>
             
             <TabsContent value="actions" className="pt-2">
               <div className="grid grid-cols-2 gap-3">
@@ -121,23 +197,6 @@ export function VariantAccordionItem({
                   <Badge variant="outline" className="bg-secondary/20">0 active</Badge>
                 </div>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="conversions">
-              {variant.sizeChart ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {variant.sizeChart.availableConversions.map((conversion, idx) => (
-                    <div key={idx} className="border rounded-md p-3 text-sm bg-secondary/10 hover:bg-secondary/20 transition-colors">
-                      <span className="text-primary font-medium">{conversion.type.toUpperCase()}: </span>
-                      <span className="font-semibold text-foreground">{conversion.size}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center p-4 text-sm text-muted-foreground border rounded-md bg-secondary/5">
-                  No size conversion information available
-                </div>
-              )}
             </TabsContent>
           </Tabs>
         </div>

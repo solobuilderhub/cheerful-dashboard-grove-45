@@ -18,6 +18,14 @@ export interface Variant {
   size: string;
   sizeChart?: SizeChart;
   quantity?: number;
+  dateAdded?: string;
+  warehouseLocation1?: string;
+  warehouseLocation2?: string;
+  warehouseLocation3?: string;
+  wholesalePrice?: number;
+  retailPrice?: number;
+  totalSoldStockX?: number;
+  totalSoldGoat?: number;
 }
 
 export interface ProductAttributes {
