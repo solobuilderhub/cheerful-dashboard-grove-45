@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Table, TableBody } from "@/components/ui/table";
 import { FilterValues } from './FilterModal';
@@ -43,7 +44,7 @@ export function InventoryTable({ searchQuery, filters, onViewItem }: InventoryTa
               ))
             ) : (
               <tr>
-                <td colSpan={7}>
+                <td colSpan={6}>
                   <InventoryEmptyState />
                 </td>
               </tr>

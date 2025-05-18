@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { Checkbox } from "@/components/ui/checkbox";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Trash2, Eye } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { InventoryItem } from '../inventory-drawer/types';
 
@@ -19,9 +18,6 @@ export function InventoryTableRow({ item, onViewItem }: InventoryTableRowProps) 
   return (
     <TableRow className="border-b hover:bg-secondary/10">
       <TableCell>
-        <Checkbox />
-      </TableCell>
-      <TableCell>
         <Avatar className="h-10 w-10 rounded">
           <AvatarImage src={item.image} alt={item.name} />
           <AvatarFallback className="bg-secondary text-xs">
@@ -36,7 +32,7 @@ export function InventoryTableRow({ item, onViewItem }: InventoryTableRowProps) 
       <TableCell>{stockxStyleId}</TableCell>
       <TableCell>{goatStyleId}</TableCell>
       <TableCell>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center">
           <Button 
             variant="ghost" 
             size="icon" 
@@ -44,13 +40,6 @@ export function InventoryTableRow({ item, onViewItem }: InventoryTableRowProps) 
             onClick={() => onViewItem(item)}
           >
             <Eye size={16} />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="text-muted-foreground hover:text-destructive"
-          >
-            <Trash2 size={16} />
           </Button>
         </div>
       </TableCell>
