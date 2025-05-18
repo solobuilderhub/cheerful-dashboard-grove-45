@@ -13,10 +13,10 @@ export function InventoryTableHeader() {
         <TableHead className="w-[60px]"></TableHead>
         <TableHead>Name</TableHead>
         <TableHead>Size</TableHead>
+        <TableHead>SKU</TableHead>
+        <TableHead>Status</TableHead>
         <TableHead>Qty</TableHead>
-        <TableHead>Added Date</TableHead>
-        <TableHead>Warehouse</TableHead>
-        <TableHead>Cost</TableHead>
+        <TableHead>Market Price</TableHead>
         <TableHead className="w-[80px]">Actions</TableHead>
       </TableRow>
     </TableHeader>
