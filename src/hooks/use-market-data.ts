@@ -13,8 +13,85 @@ const mockStockXMarketData = {
   flexLowestAskAmount: null
 };
 
-// Mock GOAT market data
+// Enhanced GOAT market data with more sizes and data points
 const mockGoatMarketData = [
+  {
+    size: 4,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "14500",
+      highest_offer_price_cents: "13000",
+      last_sold_listing_price_cents: "15000",
+      global_indicator_price_cents: "15500"
+    }
+  },
+  {
+    size: 4.5,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "15200",
+      highest_offer_price_cents: "14000",
+      last_sold_listing_price_cents: "15600",
+      global_indicator_price_cents: "16000"
+    }
+  },
+  {
+    size: 5,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "15500",
+      highest_offer_price_cents: "14200",
+      last_sold_listing_price_cents: "15800",
+      global_indicator_price_cents: "16200"
+    }
+  },
+  {
+    size: 5.5,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "15800",
+      highest_offer_price_cents: "14400",
+      last_sold_listing_price_cents: "16000",
+      global_indicator_price_cents: "16500"
+    }
+  },
+  {
+    size: 6,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "16000",
+      highest_offer_price_cents: "14600",
+      last_sold_listing_price_cents: "16200",
+      global_indicator_price_cents: "16800"
+    }
+  },
+  {
+    size: 7,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "16300",
+      highest_offer_price_cents: "14800",
+      last_sold_listing_price_cents: "16500",
+      global_indicator_price_cents: "17000"
+    }
+  },
+  {
+    size: 8,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "16500",
+      highest_offer_price_cents: "15000",
+      last_sold_listing_price_cents: "17000",
+      global_indicator_price_cents: "17500"
+    }
+  },
   {
     size: 9,
     product_condition: "PRODUCT_CONDITION_NEW",
@@ -35,6 +112,28 @@ const mockGoatMarketData = [
       highest_offer_price_cents: "15000",
       last_sold_listing_price_cents: "17200",
       global_indicator_price_cents: "18000"
+    }
+  },
+  {
+    size: 11,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "17200",
+      highest_offer_price_cents: "15500",
+      last_sold_listing_price_cents: "17800",
+      global_indicator_price_cents: "18500"
+    }
+  },
+  {
+    size: 12,
+    product_condition: "PRODUCT_CONDITION_NEW",
+    packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
+    availability: {
+      lowest_listing_price_cents: "17500",
+      highest_offer_price_cents: "16000",
+      last_sold_listing_price_cents: "18200",
+      global_indicator_price_cents: "19000"
     }
   }
 ];
