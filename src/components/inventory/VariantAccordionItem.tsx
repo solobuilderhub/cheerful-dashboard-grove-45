@@ -11,27 +11,6 @@ import { Package, LineChart, Eye, Tag, Truck } from 'lucide-react';
 import { InventoryQuantityControl } from './InventoryQuantityControl';
 import { Variant } from '@/components/inventory-drawer/types';
 
-interface SizeChart {
-  defaultConversion: {
-    size: string;
-    type: string;
-  };
-  availableConversions: Array<{
-    size: string;
-    type: string;
-  }>;
-}
-
-interface Variant {
-  _id: string;
-  variantId: string;
-  variantName: string;
-  variantValue: string;
-  size: string;
-  sizeChart?: SizeChart;
-  quantity?: number;
-}
-
 interface VariantAccordionItemProps {
   variant: Variant;
   onListItem: (platform: 'stockx' | 'goat', variantId: string) => void;

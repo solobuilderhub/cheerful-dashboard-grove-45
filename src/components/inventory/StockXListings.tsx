@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Table,
@@ -53,10 +52,11 @@ export interface StockXListing {
 interface StockXListingsProps {
   listings: StockXListing[];
   lastUpdated: string;
-  filterByVariantId?: string; // Added this prop to match what's being passed in VariantListingsDialog
+  filterByVariantId?: string;
+  isLoading?: boolean; // Add the isLoading prop
 }
 
-export function StockXListings({ listings, lastUpdated, filterByVariantId }: StockXListingsProps) {
+export function StockXListings({ listings, lastUpdated, filterByVariantId, isLoading = false }: StockXListingsProps) {
   const [selectedListing, setSelectedListing] = useState<StockXListing | null>(null);
   
   // Filter listings by variant if provided
@@ -86,6 +86,23 @@ export function StockXListings({ listings, lastUpdated, filterByVariantId }: Sto
       inventoryType: listing.inventoryType
     };
   };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">StockX Listings</CardTitle>
+          <CardDescription>Loading listings...</CardDescription>
+        </CardHeader>
+        <CardContent className="p-4 text-center">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="h-6 bg-secondary/30 rounded w-3/4 mb-2"></div>
+            <div className="h-6 bg-secondary/30 rounded w-1/2"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>

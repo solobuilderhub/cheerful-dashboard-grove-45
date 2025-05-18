@@ -16,6 +16,9 @@ interface InventoryItemSummaryProps {
     productAttributes?: {
       category?: string;
       gender?: string;
+      colorway?: string;
+      releaseDate?: string;
+      season?: string;
     };
     stockx?: {
       sku?: string;
@@ -59,6 +62,30 @@ export function InventoryItemSummary({ item }: InventoryItemSummaryProps) {
             <Badge variant="outline">
               {item.productAttributes.gender}
             </Badge>
+          )}
+        </div>
+
+        {/* Product information moved above */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          {item.productAttributes?.colorway && (
+            <div className="flex justify-between py-1 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Colorway</span>
+              <span className="font-medium">{item.productAttributes.colorway}</span>
+            </div>
+          )}
+          
+          {item.productAttributes?.releaseDate && (
+            <div className="flex justify-between py-1 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Release Date</span>
+              <span className="font-medium">{new Date(item.productAttributes.releaseDate).toLocaleDateString()}</span>
+            </div>
+          )}
+          
+          {item.productAttributes?.season && (
+            <div className="flex justify-between py-1 border-b border-border/50">
+              <span className="text-sm text-muted-foreground">Season</span>
+              <span className="font-medium">{item.productAttributes.season}</span>
+            </div>
           )}
         </div>
         

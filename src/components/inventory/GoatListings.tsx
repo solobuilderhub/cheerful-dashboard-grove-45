@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -9,12 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, ExternalLink, Eye } from 'lucide-react';
 import { formatTimeAgo, formatPrice, getStatusClass } from './listing-utils';
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { ListingOrderDetail } from './ListingOrderDetail';
 
 // GOAT listing interface
 export interface GoatListing {
@@ -38,15 +34,19 @@ export interface GoatListing {
 interface GoatListingsProps {
   listings: GoatListing[];
   lastUpdated: string;
-  filterBySize?: string; // Added this prop to match what's being passed in VariantListingsDialog
+  filterBySize?: string;
+  isLoading?: boolean; // Add isLoading prop
 }
 
-export function GoatListings({ listings, lastUpdated, filterBySize }: GoatListingsProps) {
-  const [selectedListing, setSelectedListing] = useState<GoatListing | null>(null);
-  
+export function GoatListings({ 
+  listings, 
+  lastUpdated, 
+  filterBySize,
+  isLoading = false 
+}: GoatListingsProps) {
   // Filter listings by size if provided
   const filteredListings = filterBySize 
-    ? listings.filter(listing => listing.size.toString() === filterBySize) 
+    ? listings.filter(listing => String(listing.size) === filterBySize) 
     : listings;
   
   // Get a status badge component based on status string
@@ -54,13 +54,22 @@ export function GoatListings({ listings, lastUpdated, filterBySize }: GoatListin
     return <Badge variant="outline" className={getStatusClass(status)}>{status}</Badge>;
   };
 
-  // Convert GOAT listing to order format for detail view
-  const getOrderFromListing = (listing: GoatListing) => {
-    // In a real app, you might fetch the actual order details from an API
-    return {
-      ...listing
-    };
-  };
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">GOAT Listings</CardTitle>
+          <CardDescription>Loading listings...</CardDescription>
+        </CardHeader>
+        <CardContent className="p-4 text-center">
+          <div className="animate-pulse flex flex-col items-center">
+            <div className="h-6 bg-secondary/30 rounded w-3/4 mb-2"></div>
+            <div className="h-6 bg-secondary/30 rounded w-1/2"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -76,50 +85,22 @@ export function GoatListings({ listings, lastUpdated, filterBySize }: GoatListin
             <TableRow>
               <TableHead>Size</TableHead>
               <TableHead>Price</TableHead>
-              <TableHead>Condition</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Listed</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Condition</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredListings.map((listing) => (
               <TableRow key={listing.id}>
-                <TableCell className="font-medium">US {listing.size}</TableCell>
-                <TableCell className="font-medium">{formatPrice(listing.price_cents)}</TableCell>
-                <TableCell>{listing.condition.replace('CONDITION_', '')}</TableCell>
+                <TableCell className="font-medium">{listing.size} {listing.size_unit}</TableCell>
+                <TableCell className="font-medium">{formatPrice(listing.price_cents, true)}</TableCell>
                 <TableCell>{getStatusBadge(listing.status)}</TableCell>
                 <TableCell>{formatTimeAgo(listing.created_at)}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
-                          className="h-8 w-8 p-0"
-                          onClick={() => setSelectedListing(listing)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="w-full max-w-3xl">
-                        {selectedListing && (
-                          <ListingOrderDetail
-                            order={getOrderFromListing(selectedListing)}
-                            platform="goat"
-                            onClose={() => setSelectedListing(null)}
-                          />
-                        )}
-                      </DialogContent>
-                    </Dialog>
-                    <Button size="sm" variant="outline" className="h-8 w-8 p-0">
-                      <DollarSign className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="h-8 w-8 p-0">
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
-                  </div>
+                <TableCell>
+                  <Badge variant="outline" className="bg-secondary/10">
+                    {listing.condition.replace('CONDITION_', '')}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}
