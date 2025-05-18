@@ -17,16 +17,18 @@ interface InventoryItemSummaryProps {
       category?: string;
       gender?: string;
     };
+    stockx?: {
+      sku?: string;
+      productId?: string;
+    };
+    goat?: {
+      sku?: string;
+      catalogId?: string;
+    };
   };
 }
 
 export function InventoryItemSummary({ item }: InventoryItemSummaryProps) {
-  // Format price display
-  const formatPrice = (price: string) => {
-    if (!price) return '-';
-    return price.startsWith('$') ? price : `$${price}`;
-  };
-
   return (
     <div className="flex flex-col lg:flex-row gap-6 mb-6">
       <div className="flex-shrink-0">
@@ -60,19 +62,7 @@ export function InventoryItemSummary({ item }: InventoryItemSummaryProps) {
           )}
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mt-4">
-          <div>
-            <p className="text-sm text-muted-foreground">Retail Price</p>
-            <p className="font-medium">{formatPrice(item.cost)}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Warehouse Location</p>
-            <p className="font-medium">{item.warehouseLocation}</p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Date Added</p>
-            <p className="font-medium">{item.dateAdded}</p>
-          </div>
+        <div className="grid grid-cols-1 mt-4">
           <div>
             <p className="text-sm text-muted-foreground">Total Quantity</p>
             <p className="font-medium">{item.quantity}</p>

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from '@/components/ui/badge';
 import { MarketDataCard } from './MarketDataCard';
 import { Variant } from '@/components/inventory-drawer/types';
@@ -29,8 +29,10 @@ export function MarketDataDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             Market Data for Size {variant.size}
-            <Badge variant="outline" className="ml-2">Last Updated: {new Date().toLocaleString()}</Badge>
           </DialogTitle>
+          <DialogDescription>
+            <Badge variant="outline" className="mr-2">Last Updated: {new Date().toLocaleString()}</Badge>
+          </DialogDescription>
         </DialogHeader>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
