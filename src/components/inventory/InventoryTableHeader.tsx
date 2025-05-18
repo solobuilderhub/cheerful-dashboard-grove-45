@@ -12,11 +12,9 @@ export function InventoryTableHeader() {
         </TableHead>
         <TableHead className="w-[60px]"></TableHead>
         <TableHead>Name</TableHead>
-        <TableHead>Size</TableHead>
-        <TableHead>SKU</TableHead>
-        <TableHead>Status</TableHead>
-        <TableHead>Qty</TableHead>
-        <TableHead>Market Price</TableHead>
+        <TableHead>Brand</TableHead>
+        <TableHead>Stockx Style Id</TableHead>
+        <TableHead>Goat Style Id</TableHead>
         <TableHead className="w-[80px]">Actions</TableHead>
       </TableRow>
     </TableHeader>
