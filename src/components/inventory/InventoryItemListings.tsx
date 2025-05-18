@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -85,38 +86,44 @@ export function InventoryItemListings({ styleId, name }: InventoryItemListingsPr
 
   const mockGoatListings: GoatListing[] = [
     {
-      id: "019553af-bc11-7893-9b5b-591785703a49",
-      catalog_id: "air-jordan-13-retro-wheat-2023-414571-171",
-      condition: "CONDITION_NEW",
-      packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
-      size: 9,
-      size_unit: "SIZE_UNIT_US",
-      sku: styleId,
-      consigned: false,
-      created_at: "2025-03-01T21:49:40.323Z",
-      updated_at: "2025-04-05T02:29:48.904Z",
-      status: "LISTING_STATUS_ACTIVE",
-      price_cents: "14000",
-      activated_at: "2025-04-05T02:29:48.902Z",
-      defects: [],
-      additional_defects: ""
+      amount: "140",
+      order: null,
+      product: {
+        productId: "air-jordan-13-retro-wheat-2023-414571-171",
+        productName: "Air Jordan 13 Retro Wheat (2023)",
+        styleId: styleId,
+      },
+      variant: {
+        variantId: "size-9-us-men",
+        variantName: "US 9 Men",
+        variantValue: "9"
+      },
+      currencyCode: "USD",
+      listingId: "019553af-bc11-7893-9b5b-591785703a49",
+      status: "ACTIVE",
+      inventoryType: "STANDARD",
+      createdAt: "2025-03-01T21:49:40.323Z",
+      updatedAt: "2025-04-05T02:29:48.904Z",
     },
     {
-      id: "119553af-bc11-7893-9b5b-591785703b50",
-      catalog_id: "air-jordan-13-retro-wheat-2023-414571-171",
-      condition: "CONDITION_NEW",
-      packaging_condition: "PACKAGING_CONDITION_GOOD_CONDITION",
-      size: 10,
-      size_unit: "SIZE_UNIT_US",
-      sku: styleId,
-      consigned: false,
-      created_at: "2025-03-05T10:23:15.323Z",
-      updated_at: "2025-04-07T08:15:22.904Z",
-      status: "LISTING_STATUS_ACTIVE",
-      price_cents: "15000",
-      activated_at: "2025-04-07T08:15:22.902Z",
-      defects: [],
-      additional_defects: ""
+      amount: "150",
+      order: null,
+      product: {
+        productId: "air-jordan-13-retro-wheat-2023-414571-171",
+        productName: "Air Jordan 13 Retro Wheat (2023)",
+        styleId: styleId,
+      },
+      variant: {
+        variantId: "size-10-us-men",
+        variantName: "US 10 Men",
+        variantValue: "10"
+      },
+      currencyCode: "USD",
+      listingId: "119553af-bc11-7893-9b5b-591785703b50",
+      status: "ACTIVE",
+      inventoryType: "STANDARD",
+      createdAt: "2025-03-05T10:23:15.323Z",
+      updatedAt: "2025-04-07T08:15:22.904Z",
     }
   ];
 

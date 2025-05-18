@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   Table,
@@ -41,7 +42,7 @@ interface GoatListingsProps {
   listings: GoatListing[];
   lastUpdated: string;
   filterByVariantId?: string;
-  isLoading?: boolean; // Add the isLoading prop
+  isLoading?: boolean;
 }
 
 export function GoatListings({ listings, lastUpdated, filterByVariantId, isLoading = false }: GoatListingsProps) {
