@@ -1,10 +1,10 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MarketDataCard } from './MarketDataCard';
 import { Variant } from '@/components/inventory-drawer/types';
 import { useStockXMarketData, useGoatMarketData } from '@/hooks/use-market-data';
+import { X } from 'lucide-react';
 
 interface MarketDataDialogProps {
   open: boolean;
@@ -23,19 +23,34 @@ export function MarketDataDialog({
   
   if (!variant) return null;
 
+  // Format the current date and time
+  const formattedDate = new Date().toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  }).replace(",", "");
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            Market Data for Size {variant.size}
-          </DialogTitle>
-          <DialogDescription>
-            <Badge variant="outline" className="mr-2">Last Updated: {new Date().toLocaleString()}</Badge>
-          </DialogDescription>
-        </DialogHeader>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+      <DialogContent className="max-w-md bg-neutral-900 text-white border-0 p-0">
+        <div className="p-4">
+          <header className="flex items-center justify-between mb-1">
+            <DialogTitle className="text-white text-lg font-medium m-0">
+              Market Data for Size {variant.size}
+            </DialogTitle>
+            <button 
+              onClick={() => onOpenChange(false)}
+              className="text-gray-400 hover:text-white"
+            >
+              <X size={18} />
+            </button>
+          </header>
+          <p className="text-xs text-gray-400 mb-4">Last Updated: {formattedDate}</p>
+          
           <MarketDataCard 
             stockXData={stockXData} 
             goatData={goatData}

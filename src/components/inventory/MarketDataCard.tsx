@@ -47,12 +47,10 @@ export function MarketDataCard({
   
   // Format price function
   const formatPrice = (cents: string) => {
-    if (!cents || cents === "0") return '$0.00';
+    if (!cents || cents === "0") return '$0';
+    if (cents.includes('.')) return `$${cents}`;
     const dollars = parseInt(cents) / 100;
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(dollars);
+    return `$${dollars}`;
   };
 
   // Get GOAT market data for a specific size
@@ -63,91 +61,88 @@ export function MarketDataCard({
   };
 
   return (
-    <Card className="p-4 relative animate-fade-in border-2 border-blue-100 shadow-md w-full">
-      <div className="flex items-center justify-between mb-4 bg-blue-50 -m-4 mb-2 px-4 py-2 border-b border-blue-100">
-        <h3 className="font-semibold text-blue-800">Market Data - Size {selectedSize}</h3>
-        <div className="flex items-center gap-2">
-          {isLoading && <Loader2 className="animate-spin h-4 w-4 text-blue-600" />}
-          {onClose && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-8 w-8 p-0 rounded-full hover:bg-blue-200 text-blue-700"
-              onClick={onClose}
+    <Card className="w-full border-0 shadow-none">
+      <div className="bg-white rounded-md">
+        <h3 className="text-blue-800 font-medium p-4">Market Data - Size {selectedSize}</h3>
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 bg-gray-100 rounded-md">
+            <TabsTrigger 
+              value="stockx" 
+              className="data-[state=active]:bg-white"
             >
-              <X size={16} />
-            </Button>
-          )}
-        </div>
+              StockX
+            </TabsTrigger>
+            <TabsTrigger 
+              value="goat" 
+              className="data-[state=active]:bg-white"
+            >
+              GOAT
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="stockx" className="p-2">
+            {isLoading || !stockXData ? (
+              <div className="h-32 flex items-center justify-center">
+                <Loader2 className="animate-spin h-6 w-6 text-blue-600" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-green-50 rounded-md p-3 border border-green-100">
+                  <div className="text-sm text-green-700">Lowest Ask</div>
+                  <div className="text-xl font-semibold text-green-800">${stockXData.lowestAskAmount}</div>
+                </div>
+                <div className="bg-blue-50 rounded-md p-3 border border-blue-100">
+                  <div className="text-sm text-blue-700">Highest Bid</div>
+                  <div className="text-xl font-semibold text-blue-800">${stockXData.highestBidAmount}</div>
+                </div>
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="goat" className="p-2">
+            {isLoading || !goatData ? (
+              <div className="h-32 flex items-center justify-center">
+                <Loader2 className="animate-spin h-6 w-6 text-blue-600" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {(() => {
+                  const data = getGoatMarketDataForSize(selectedSize);
+                  if (!data) return (
+                    <div className="col-span-2 text-center py-6">
+                      <p className="text-muted-foreground">No market data available for this size</p>
+                    </div>
+                  );
+                  
+                  return (
+                    <>
+                      <div className="bg-green-50 rounded-md p-3 border border-green-100">
+                        <div className="text-sm text-green-700">Lowest Listing Price</div>
+                        <div className="text-xl font-semibold text-green-800">
+                          {formatPrice(data.availability.lowest_listing_price_cents)}
+                        </div>
+                      </div>
+                      <div className="bg-blue-50 rounded-md p-3 border border-blue-100">
+                        <div className="text-sm text-blue-700">Highest Offer Price</div>
+                        <div className="text-xl font-semibold text-blue-800">
+                          {formatPrice(data.availability.highest_offer_price_cents)}
+                        </div>
+                      </div>
+                      <div className="bg-purple-50 rounded-md p-3 border border-purple-100">
+                        <div className="text-sm text-purple-700">Last Sold Price</div>
+                        <div className="text-xl font-semibold text-purple-800">
+                          {formatPrice(data.availability.last_sold_listing_price_cents)}
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
-      
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
-        <TabsList className="grid w-full grid-cols-2 bg-blue-50">
-          <TabsTrigger value="stockx" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800">StockX</TabsTrigger>
-          <TabsTrigger value="goat" className="data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800">GOAT</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="stockx" className="space-y-4 mt-4">
-          {isLoading || !stockXData ? (
-            <div className="h-32 flex items-center justify-center">
-              <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="border rounded-md p-3 bg-green-50 border-green-100">
-                <div className="text-sm text-green-700">Lowest Ask</div>
-                <div className="text-xl font-semibold text-green-800">${stockXData.lowestAskAmount}</div>
-              </div>
-              <div className="border rounded-md p-3 bg-blue-50 border-blue-100">
-                <div className="text-sm text-blue-700">Highest Bid</div>
-                <div className="text-xl font-semibold text-blue-800">${stockXData.highestBidAmount}</div>
-              </div>
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="goat" className="space-y-4 mt-4">
-          {isLoading || !goatData ? (
-            <div className="h-32 flex items-center justify-center">
-              <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {(() => {
-                const data = getGoatMarketDataForSize(selectedSize);
-                if (!data) return (
-                  <div className="col-span-2 text-center py-6">
-                    <p className="text-muted-foreground">No market data available for this size</p>
-                  </div>
-                );
-                
-                return (
-                  <>
-                    <div className="border rounded-md p-3 bg-green-50 border-green-100">
-                      <div className="text-sm text-green-700">Lowest Listing Price</div>
-                      <div className="text-xl font-semibold text-green-800">
-                        {formatPrice(data.availability.lowest_listing_price_cents)}
-                      </div>
-                    </div>
-                    <div className="border rounded-md p-3 bg-blue-50 border-blue-100">
-                      <div className="text-sm text-blue-700">Highest Offer Price</div>
-                      <div className="text-xl font-semibold text-blue-800">
-                        {formatPrice(data.availability.highest_offer_price_cents)}
-                      </div>
-                    </div>
-                    <div className="border rounded-md p-3 bg-purple-50 border-purple-100">
-                      <div className="text-sm text-purple-700">Last Sold Price</div>
-                      <div className="text-xl font-semibold text-purple-800">
-                        {formatPrice(data.availability.last_sold_listing_price_cents)}
-                      </div>
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
     </Card>
   );
 }
